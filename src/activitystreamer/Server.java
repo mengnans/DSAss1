@@ -39,6 +39,8 @@ public class Server {
 		options.addOption("a",true,"activity interval in milliseconds");
 		options.addOption("s",true,"secret for the server to use");
 		
+		//123
+		
 		
 		// build the parser
 		CommandLineParser parser = new DefaultParser();
