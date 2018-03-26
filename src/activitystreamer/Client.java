@@ -1,3 +1,4 @@
+//test commit
 package activitystreamer;
 
 import org.apache.commons.cli.CommandLine;
