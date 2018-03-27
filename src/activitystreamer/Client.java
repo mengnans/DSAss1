@@ -1,5 +1,4 @@
 package activitystreamer;
-
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
@@ -13,9 +12,9 @@ import activitystreamer.client.ClientSkeleton;
 import activitystreamer.util.Settings;
 
 public class Client {
-	
+
 	private static final Logger log = LogManager.getLogger();
-	
+
 	private static void help(Options options){
 		String header = "An ActivityStream Client for Unimelb COMP90015\n\n";
 		String footer = "\ncontact aharwood@unimelb.edu.au for issues.";
@@ -23,7 +22,8 @@ public class Client {
 		formatter.printHelp("ActivityStreamer.Client", header, options, footer, true);
 		System.exit(-1);
 	}
-	
+
+
 	public static void main(String[] args) {
 		
 		log.info("reading command line options");
