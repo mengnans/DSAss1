@@ -20,7 +20,6 @@ public class ServerItem extends Thread {
 
     public static ServerItem getInstance() {
         if (serverItem == null) {
-
             serverItem = new ServerItem();
         }
         return serverItem;
