@@ -6,32 +6,44 @@ import org.json.simple.JSONObject;
 
 public class ClientItem extends Thread {
     private static final Logger log = LogManager.getLogger();
-    private static ClientItem clientSolution;
+    private static ClientItem clientItem;
+    private ClientProcessor clientProcessor;
     private FormWindow formWindowItem;
 
     public static ClientItem getInstance() {
-        if (clientSolution == null) {
-            clientSolution = new ClientItem();
+        if (clientItem == null) {
+            clientItem = new ClientItem();
         }
-        return clientSolution;
+        return clientItem;
     }
 
     public ClientItem() {
+        clientProcessor = new ClientProcessor(this);
         formWindowItem = new FormWindow();
         start();
     }
 
-    @SuppressWarnings("unchecked")
-    public void sendActivityObject(JSONObject activityObj) {
+    public void run() {
 
+    }
+
+    @SuppressWarnings("unchecked")
+    public void sendActivityObject(JSONObject argMessageObject) {
+        clientProcessor.ProcessMessage(argMessageObject);
     }
 
     public void disconnect() {
 
     }
 
-    public void run() {
 
+    /**
+     * Show given json object on screen
+     *
+     * @param argMessageObject The json message object
+     */
+    public void SetDisplay(JSONObject argMessageObject) {
+        formWindowItem.setOutputText(argMessageObject);
     }
 
 }

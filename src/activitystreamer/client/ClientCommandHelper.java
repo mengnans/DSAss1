@@ -9,6 +9,14 @@ public class ClientCommandHelper {
 
     private static final Logger log = LogManager.getLogger();
 
+    private static void help(Options options) {
+        String header = "An ActivityStream Client for Unimelb COMP90015\n\n";
+        String footer = "\ncontact aharwood@unimelb.edu.au for issues.";
+        HelpFormatter formatter = new HelpFormatter();
+        formatter.printHelp("ActivityStreamer.Client", header, options, footer, true);
+        System.exit(-1);
+    }
+
     public static void SetReadCommands(String[] args) {
         log.info("reading command line options");
 
@@ -17,7 +25,6 @@ public class ClientCommandHelper {
         options.addOption("rp", true, "remote port number");
         options.addOption("rh", true, "remote hostname");
         options.addOption("s", true, "secret for username");
-
 
         // build the parser
         CommandLineParser parser = new DefaultParser();
@@ -50,14 +57,6 @@ public class ClientCommandHelper {
         if (cmd.hasOption("u")) {
             Settings.setUsername(cmd.getOptionValue("u"));
         }
-    }
-
-    private static void help(Options options) {
-        String header = "An ActivityStream Client for Unimelb COMP90015\n\n";
-        String footer = "\ncontact aharwood@unimelb.edu.au for issues.";
-        HelpFormatter formatter = new HelpFormatter();
-        formatter.printHelp("ActivityStreamer.Client", header, options, footer, true);
-        System.exit(-1);
     }
 
 }

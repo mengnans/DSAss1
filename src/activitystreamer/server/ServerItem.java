@@ -14,7 +14,7 @@ public class ServerItem extends Thread {
     private static ArrayList<ServerConnection> connections;
     private static boolean term = false;
     private static ServerListener listener;
-    private static ServerProcesser processer;
+    private static ServerProcessor processer;
 
     protected static ServerItem serverItem = null;
 

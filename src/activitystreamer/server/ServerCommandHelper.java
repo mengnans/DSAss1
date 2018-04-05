@@ -24,7 +24,6 @@ public class ServerCommandHelper {
     }
 
     public static void SetReadCommands(String[] args) {
-
         log.info("reading command line options");
 
         Options options = new Options();

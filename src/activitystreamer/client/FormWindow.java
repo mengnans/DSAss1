@@ -71,7 +71,7 @@ public class FormWindow extends JFrame implements ActionListener {
         add(mainPanel);
 
         setLocationRelativeTo(null);
-        setSize(1280, 768);
+        setSize(1280, 720);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setVisible(true);
     }
