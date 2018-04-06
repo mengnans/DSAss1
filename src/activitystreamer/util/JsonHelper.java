@@ -17,7 +17,7 @@ public class JsonHelper {
      * @param argObject The object to be converted
      * @return
      */
-    public static String ToJson(JsonObject argObject) {
+    public static String ObjectToString(JsonObject argObject) {
         String _content = argObject.toString();
         return _content;
     }
@@ -28,7 +28,7 @@ public class JsonHelper {
      * @param argContent Json data string
      * @return
      */
-    public static JsonObject ConvertToObject(String argContent) {
+    public static JsonObject StringToObject(String argContent) {
         JsonObject _obj = (JsonObject) parser.parse(argContent);
         return _obj;
     }

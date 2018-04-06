@@ -1,26 +1,33 @@
 package activitystreamer.client;
 
-import org.json.simple.JSONObject;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 public class ClientProcessor {
 
-    private ClientItem clientItem;
+    private static ClientAPIHelper apiHelper;
 
-    public ClientProcessor(ClientItem argClientItem) {
-        clientItem = argClientItem;
+    public static void SetInitial(ClientAPIHelper argApiHelper) {
+        apiHelper = argApiHelper;
     }
 
-    public void ProcessMessage(JSONObject argMessageObject) {
+
+    /**
+     * This function will be called whe na message is received through the network
+     *
+     * @param argJsonObject
+     */
+    public static void ProcessNetworkMessage(JsonObject argJsonObject) {
 
     }
 
     /**
-     * Show given json object on screen
+     * This function will be called whe na message is received through the GUI
      *
-     * @param argMessageObject The json message object
+     * @param argJsonObject
      */
-    private void SetDisplay(JSONObject argMessageObject) {
-        clientItem.SetDisplay(argMessageObject);
+    public static void ProcessUserMessage(JsonObject argJsonObject) {
+
     }
 
 }
