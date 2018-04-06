@@ -5,7 +5,7 @@ import com.google.gson.JsonObject;
 
 public class ServerAPIHelper {
 
-    public void SendMessage(ServerConnection argConnection, JsonObject argMessageObject) {
+    public static void SendMessage(ServerConnection argConnection, JsonObject argMessageObject) {
         String _messageContent = JsonHelper.ObjectToString(argMessageObject);
         argConnection.writeMsg(_messageContent);
     }

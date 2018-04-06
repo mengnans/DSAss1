@@ -28,7 +28,7 @@ public class ServerListener extends Thread {
             Socket _clientSocket;
             try {
                 _clientSocket = serverSocket.accept();
-                ServerItem.getInstance().SetNewConnection(_clientSocket);
+                ServerItem.getInstance().ReceiveNewConnection(_clientSocket);
             } catch (IOException e) {
                 log.info("received exception, shutting down");
                 term = true;

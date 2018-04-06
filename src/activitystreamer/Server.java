@@ -17,7 +17,7 @@ public class Server {
         final ServerItem _serverItem = ServerItem.getInstance();
         Runtime.getRuntime().addShutdownHook(new Thread() {
             public void run() {
-                _serverItem.setTerm(true);
+                _serverItem.SetServerShutdown(true);
                 _serverItem.interrupt();
             }
         });

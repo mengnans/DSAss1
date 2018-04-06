@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.net.Socket;
 import java.util.ArrayList;
 
+import activitystreamer.util.JsonHelper;
+import com.google.gson.JsonObject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -14,7 +16,6 @@ public class ServerItem extends Thread {
     private static ArrayList<ServerConnection> connections;
     private static boolean term = false;
     private static ServerListener listener;
-    private static ServerProcessor processer;
 
     protected static ServerItem serverItem = null;
 
@@ -25,12 +26,16 @@ public class ServerItem extends Thread {
         return serverItem;
     }
 
+    public final ArrayList<ServerConnection> getConnections() {
+        return connections;
+    }
+
     private ServerItem() {
         // initialize the connections array
         connections = new ArrayList<ServerConnection>();
         // start a listener
         try {
-            initiateConnection();
+            ConnectToServer();
             listener = new ServerListener();
         } catch (IOException e1) {
             log.fatal("failed to startup a listening thread: " + e1);
@@ -42,18 +47,14 @@ public class ServerItem extends Thread {
     public void run() {
         log.info("using activity interval of " + Settings.getActivityInterval() + " milliseconds");
         while (!term) {
-
-            // do something with 5 second intervals in between
             try {
                 Thread.sleep(Settings.getActivityInterval());
             } catch (InterruptedException e) {
                 log.info("received an interrupt, system is shutting down");
                 break;
             }
-            if (!term) {
-                log.debug("doing activity");
-                term = doActivity();
-            }
+            // do something with 5 second intervals in between
+
         }
         log.info("closing " + connections.size() + " connections");
         // clean up
@@ -63,24 +64,36 @@ public class ServerItem extends Thread {
         listener.setTerm(true);
     }
 
-    public void initiateConnection() {
+    /*
+     * A new incoming connection has been established, and a reference is returned to it
+     */
+    public synchronized void ReceiveNewConnection(Socket s) throws IOException {
+        log.debug("Received a new connection: " + Settings.socketAddress(s));
+        ServerConnection _connection = new ServerConnection(s);
+        connections.add(_connection);
+        ServerProcessor.ProcessNewConnectionMessage(_connection);
+    }
+
+    public synchronized boolean ReceivedMessage(ServerConnection argConnection, String argMessageObject) {
+        log.debug("Received a new message: " + argMessageObject);
+        JsonObject _jsonObject = JsonHelper.StringToObject(argMessageObject);
+        return ServerProcessor.ProcessNetworkMessage(argConnection, _jsonObject);
+    }
+
+    public synchronized void ConnectToServer() {
         // make a connection to another server if remote hostname is supplied
         if (Settings.getRemoteHostname() != null) {
             try {
-                outgoingConnection(new Socket(Settings.getRemoteHostname(), Settings.getRemotePort()));
+                Socket _socket = new Socket(Settings.getRemoteHostname(), Settings.getRemotePort());
+                log.debug("Connected to another server: " + Settings.socketAddress(_socket));
+                ServerConnection _connection = new ServerConnection(_socket);
+                connections.add(_connection);
+                ServerProcessor.ProcessConnectToServerMessage(_connection);
             } catch (IOException e) {
                 log.error("failed to make connection to " + Settings.getRemoteHostname() + ":" + Settings.getRemotePort() + " :" + e);
                 System.exit(-1);
             }
         }
-    }
-
-    /*
-     * Processing incoming messages from the connection.
-     * Return true if the connection should close.
-     */
-    public synchronized boolean process(ServerConnection con, String msg) {
-        return true;
     }
 
     /*
@@ -91,36 +104,12 @@ public class ServerItem extends Thread {
             connections.remove(con);
     }
 
-    /*
-     * A new incoming connection has been established, and a reference is returned to it
+    /**
+     * Shutdown this server.
+     * Actually, this function should not be called according to the requirement
      */
-    public synchronized ServerConnection SetNewConnection(Socket s) throws IOException {
-        log.debug("incomming connection: " + Settings.socketAddress(s));
-        ServerConnection c = new ServerConnection(s);
-        connections.add(c);
-        return c;
-    }
-
-    /*
-     * A new outgoing connection has been established, and a reference is returned to it
-     */
-    public synchronized ServerConnection outgoingConnection(Socket s) throws IOException {
-        log.debug("outgoing connection: " + Settings.socketAddress(s));
-        ServerConnection c = new ServerConnection(s);
-        connections.add(c);
-        return c;
-    }
-
-    public boolean doActivity() {
-        return false;
-    }
-
-    public final void setTerm(boolean t) {
-        term = t;
-    }
-
-    public final ArrayList<ServerConnection> getConnections() {
-        return connections;
+    public final void SetServerShutdown() {
+        term = true;
     }
 
 }

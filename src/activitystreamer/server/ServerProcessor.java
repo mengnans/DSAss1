@@ -14,9 +14,8 @@ public class ServerProcessor {
      * This function will be called when the server succeed in connecting to another server
      *
      * @param argConnection The ServerConnection object of this new connection
-     * @param argJsonObject The json object containing the message data
      */
-    public static void ProcessConnectToServerMessage(ServerConnection argConnection, JsonObject argJsonObject) {
+    public static void ProcessConnectToServerMessage(ServerConnection argConnection) {
 
     }
 
@@ -24,9 +23,8 @@ public class ServerProcessor {
      * This function will be called when a message is received through the network
      *
      * @param argConnection The ServerConnection object of this new connection
-     * @param argJsonObject The json object containing the message data
      */
-    public static void ProcessNewConnectionMessage(ServerConnection argConnection, JsonObject argJsonObject) {
+    public static void ProcessNewConnectionMessage(ServerConnection argConnection) {
 
     }
 
@@ -35,9 +33,11 @@ public class ServerProcessor {
      *
      * @param argConnection The ServerConnection object of this message
      * @param argJsonObject The json object containing the message data
+     * @return return True to terminate the connection; return false to remain connecting
      */
-    public static void ProcessNetworkMessage(ServerConnection argConnection, JsonObject argJsonObject) {
+    public static boolean ProcessNetworkMessage(ServerConnection argConnection, JsonObject argJsonObject) {
 
+        return false;
     }
 
 }

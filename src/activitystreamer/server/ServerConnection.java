@@ -49,7 +49,7 @@ public class ServerConnection extends Thread {
         try {
             String data;
             while (!term && (data = inreader.readLine()) != null) {
-                term = ServerItem.getInstance().process(this, data);
+                term = ServerItem.getInstance().ReceivedMessage(this, data);
             }
             log.debug("connection closed to " + Settings.socketAddress(socket));
             ServerItem.getInstance().connectionClosed(this);
