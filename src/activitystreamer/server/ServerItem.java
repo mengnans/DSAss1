@@ -30,6 +30,7 @@ public class ServerItem extends Thread {
         connections = new ArrayList<ServerConnection>();
         // start a listener
         try {
+            initiateConnection();
             listener = new ServerListener();
         } catch (IOException e1) {
             log.fatal("failed to startup a listening thread: " + e1);
@@ -41,6 +42,7 @@ public class ServerItem extends Thread {
     public void run() {
         log.info("using activity interval of " + Settings.getActivityInterval() + " milliseconds");
         while (!term) {
+
             // do something with 5 second intervals in between
             try {
                 Thread.sleep(Settings.getActivityInterval());
@@ -85,7 +87,8 @@ public class ServerItem extends Thread {
      * The connection has been closed by the other party.
      */
     public synchronized void connectionClosed(ServerConnection con) {
-        if (!term) connections.remove(con);
+        if (!term)
+            connections.remove(con);
     }
 
     /*
@@ -119,4 +122,5 @@ public class ServerItem extends Thread {
     public final ArrayList<ServerConnection> getConnections() {
         return connections;
     }
+
 }

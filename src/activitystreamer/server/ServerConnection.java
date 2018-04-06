@@ -27,8 +27,7 @@ public class ServerConnection extends Thread {
 
     private boolean term = false;
 
-
-    ServerConnection(Socket socket) throws IOException {
+    public ServerConnection(Socket socket) throws IOException {
         in = new DataInputStream(socket.getInputStream());
         out = new DataOutputStream(socket.getOutputStream());
         inreader = new BufferedReader(new InputStreamReader(in));
@@ -87,6 +86,5 @@ public class ServerConnection extends Thread {
             }
         }
     }
-
 
 }
