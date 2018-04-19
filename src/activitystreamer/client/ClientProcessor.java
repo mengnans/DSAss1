@@ -13,7 +13,7 @@ public class ClientProcessor {
 
 
     /**
-     * This function will be called whe na message is received through the network
+     * This function will be called when a message is received through the network
      *
      * @param argJsonObject
      */
@@ -22,7 +22,7 @@ public class ClientProcessor {
     }
 
     /**
-     * This function will be called whe na message is received through the GUI
+     * This function will be called when a message is received through the GUI
      *
      * @param argJsonObject
      */
