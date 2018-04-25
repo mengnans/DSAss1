@@ -30,4 +30,13 @@ public class ClientAPIHelper {
         clientItem.SetDisplay(argMessageObject);
     }
 
+    /**
+     * Send the json object to the server
+     *
+     * @param activityObject The json message object
+     */
+    public void SendActivityObject(JsonObject activityObject) {
+        clientItem.sendActivityObject(activityObject);
+    }
+
 }
