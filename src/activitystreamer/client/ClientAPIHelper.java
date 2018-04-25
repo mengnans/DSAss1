@@ -22,6 +22,12 @@ public class ClientAPIHelper {
     }
 
     /**
+     * This function will be called when a client wants
+     * to close connection with a server.
+     */
+    public void CloseConnection(){clientItem.disconnect();}
+
+    /**
      * Show given json object on screen
      *
      * @param argMessageObject The json message object
@@ -47,5 +53,34 @@ public class ClientAPIHelper {
     public void SendActivityObject(JsonObject activityObject) {
         clientItem.sendActivityObject(activityObject);
     }
+
+    /**
+     * Send the register request to the server
+     *
+     * @param reObject The json message object
+     */
+    public void SendRegRequest(JsonObject reObject) {}
+    //public void SendRegRequest(String username,String secret) {}
+
+    /**
+     * Send the login request to the server
+     *
+     * @param loginObject The json message object
+     */
+    public void SendLoginRequest(JsonObject loginObject) {}
+
+    /**
+     * Send the logout request to the server
+     *
+     * @param logoutObject The json message object
+     */
+    public void SendLogoutRequest(JsonObject logoutObject) {}
+
+    /**
+     * This function will be called while the client inputs an invalid command
+     *
+     * @param invalidObject The json message object
+     */
+    public void InvalidMessage(JsonObject invalidObject) {}
 
 }

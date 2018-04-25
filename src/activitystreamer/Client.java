@@ -15,5 +15,4 @@ public class Client {
         log.info("starting client");
         ClientItem _clientItem = ClientItem.getInstance();
     }
-
 }

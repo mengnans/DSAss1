@@ -1,5 +1,6 @@
 package activitystreamer.client;
 
+import activitystreamer.util.Settings;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
@@ -18,38 +19,20 @@ public class ClientProcessor {
     }
 
     /**
-     * This function will be called when the client wants to register a new username
-     *
-     * @param reJsonObject
-     */
-    public static void ProcessRegister(JsonObject reJsonObject) {
-
-    }
-
-    /**
      * This function will be called when the client wants to connect a server
      *
      * @param
      */
     public static void ProcessConnection() {
-        BufferedReader fileReader = new BufferedReader(new FileReader("config"));
-        //Read the only line from the file
-        String configLine = fileReader.readLine();
 
-        if(configLine != null) {
+        String serverAddress = Settings.getRemoteHostname();
+        int serverPort = Settings.getRemotePort();
 
-            //Split the string into substrings delimited by tabs
-            String[] configParams = configLine.split("\t");
-
-            //We should have two substrings, one for the IP and one for the port
-            if(configParams.length == 2) {
-                //the server is the first parameter in the line
-                String serverAddress = configParams[0];
-                //the port is the second parameter in the line
-                int serverPort = Integer.parseInt(configParams[1]);
-
-                boolean isConnection = apiHelper.SetConnection(serverAddress,serverPort);
-            }
+        boolean isConnection = apiHelper.SetConnection(serverAddress,serverPort);
+        if(isConnection){
+            apiHelper.SetDisplayMessage("The client successfully connects to the server");
+        }else{
+            apiHelper.SetDisplayMessage("The client fails to connect the server");
         }
     }
 
@@ -59,7 +42,36 @@ public class ClientProcessor {
      * @param argJsonObject
      */
     public static void ProcessNetworkMessage(JsonObject argJsonObject) {
-        apiHelper.SetDisplayMessage(argJsonObject);
+        switch (argJsonObject.get("command")) {
+            case "INVALID_MESSAGE":
+                apiHelper.SetDisplayMessage(argJsonObject.get("info"));
+                break;
+            case "AUTHENTICATION_FAIL":
+                apiHelper.CloseConnection();
+                break;
+            case "LOGIN_SUCCESS":
+                apiHelper.SetDisplayMessage(argJsonObject.get("info"));
+                break;
+            case "LOGIN_FAILED":
+                apiHelper.SetDisplayMessage("Failed to log in: " + argJsonObject.get("info"));
+                apiHelper.CloseConnection();
+                break;
+            case "ACTIVITY_BROADCAST":
+                apiHelper.SetDisplayMessage(argJsonObject);
+                break;
+            case "REDIRECT":
+                apiHelper.SetDisplayMessage("Redirected to host:" + argJsonObject.get("hostname")
+                        + " prot:" + argJsonObject.get("port"));
+                break;
+            case "REGISTER_FAILED":
+                apiHelper.SetDisplayMessage("Failed to register because " +
+                        argJsonObject.get("info"));
+                break;
+            case "REGISTER_SUCCESS":
+                apiHelper.SetDisplayMessage(argJsonObject.get("info"));
+                break;
+            default:
+        }
     }
 
     /**
@@ -68,18 +80,23 @@ public class ClientProcessor {
      * @param argJsonObject
      */
     public static void ProcessUserMessage(JsonObject argJsonObject) {
-        //Use a scanner to read input from the console
-        Scanner scanner = new Scanner(System.in);
-        String inputStr = null;
-
-        //While the user input differs from "exit"
-        while (!(inputStr = scanner.nextLine()).equals("exit")) {
-
-            // Send the input string to the server by writing to the socket output stream
-            apiHelper.SendActivityObject(argJsonObject);
-            // writer.write(inputStr + "\n");
-            // writer.flush();
+        switch (argJsonObject.get("command")){
+            case "REGISTER":
+                apiHelper.SendRegRequest(argJsonObject);
+                //apiHelper.SendRegRequest(argJsonObject.get("username"),argJsonObject.get("secret"));
+                break;
+            case "LOGIN":
+                apiHelper.SendLoginRequest(argJsonObject);
+                break;
+            case "LOGOUT":
+                apiHelper.SendLogoutRequest(argJsonObject);
+                apiHelper.CloseConnection();
+                break;
+            case "ACTIVITY_MESSAGE":
+                apiHelper.SendActivityObject(argJsonObject);
+                break;
+            default:
+                apiHelper.InvalidMessage(argJsonObject);
         }
     }
-
 }
