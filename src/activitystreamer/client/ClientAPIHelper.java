@@ -51,14 +51,7 @@ public class ClientAPIHelper {
      * @param activityObject The json message object
      */
     public void SendMessage(JsonObject activityObject) {
-        clientItem.sendActivityObject(activityObject);
+        clientItem.SendMessageToServer(activityObject);
     }
-
-    /**
-     * This function will be called while the client inputs an invalid command
-     *
-     * @param invalidObject The json message object
-     */
-    public void InvalidMessage(JsonObject invalidObject) {}
 
 }

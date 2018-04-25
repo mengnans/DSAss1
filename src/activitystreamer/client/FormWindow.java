@@ -90,7 +90,7 @@ public class FormWindow extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == sendButton) {
             String msg = inputText.getText().trim().replaceAll("\r", "").replaceAll("\n", "").replaceAll("\t", "");
-            ClientItem.getInstance().sendActivityObject(JsonHelper.StringToObject(msg));
+            ClientItem.getInstance().ProcessUserMessage(JsonHelper.StringToObject(msg));
         } else if (e.getSource() == disconnectButton) {
             ClientItem.getInstance().disconnect();
         }
