@@ -50,31 +50,9 @@ public class ClientAPIHelper {
      *
      * @param activityObject The json message object
      */
-    public void SendActivityObject(JsonObject activityObject) {
+    public void SendMessage(JsonObject activityObject) {
         clientItem.sendActivityObject(activityObject);
     }
-
-    /**
-     * Send the register request to the server
-     *
-     * @param reObject The json message object
-     */
-    public void SendRegRequest(JsonObject reObject) {}
-    //public void SendRegRequest(String username,String secret) {}
-
-    /**
-     * Send the login request to the server
-     *
-     * @param loginObject The json message object
-     */
-    public void SendLoginRequest(JsonObject loginObject) {}
-
-    /**
-     * Send the logout request to the server
-     *
-     * @param logoutObject The json message object
-     */
-    public void SendLogoutRequest(JsonObject logoutObject) {}
 
     /**
      * This function will be called while the client inputs an invalid command

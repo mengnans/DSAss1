@@ -2,13 +2,6 @@ package activitystreamer.client;
 
 import activitystreamer.util.Settings;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileReader;
-import java.io.OutputStreamWriter;
-import java.util.Scanner;
 
 public class ClientProcessor {
 
@@ -77,21 +70,21 @@ public class ClientProcessor {
     public static void ProcessUserMessage(JsonObject argJsonObject) {
         switch (argJsonObject.get("command").toString()) {
             case "REGISTER":
-                apiHelper.SendRegRequest(argJsonObject);
-                //apiHelper.SendRegRequest(argJsonObject.get("username"),argJsonObject.get("secret"));
+                apiHelper.SendMessage(argJsonObject);
                 break;
             case "LOGIN":
-                apiHelper.SendLoginRequest(argJsonObject);
+                apiHelper.SendMessage(argJsonObject);
                 break;
             case "LOGOUT":
-                apiHelper.SendLogoutRequest(argJsonObject);
+                apiHelper.SendMessage(argJsonObject);
                 apiHelper.CloseConnection();
                 break;
             case "ACTIVITY_MESSAGE":
-                apiHelper.SendActivityObject(argJsonObject);
+                apiHelper.SendMessage(argJsonObject);
                 break;
             default:
-                apiHelper.InvalidMessage(argJsonObject);
+                //apiHelper.InvalidMessage(argJsonObject);
+                break;
         }
     }
 }
