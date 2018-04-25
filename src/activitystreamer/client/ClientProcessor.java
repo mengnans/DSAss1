@@ -20,18 +20,15 @@ public class ClientProcessor {
 
     /**
      * This function will be called when the client wants to connect a server
-     *
-     * @param
      */
     public static void ProcessConnection() {
-
         String serverAddress = Settings.getRemoteHostname();
         int serverPort = Settings.getRemotePort();
 
-        boolean isConnection = apiHelper.SetConnection(serverAddress,serverPort);
-        if(isConnection){
+        boolean isConnection = apiHelper.SetConnection(serverAddress, serverPort);
+        if (isConnection) {
             apiHelper.SetDisplayMessage("The client successfully connects to the server");
-        }else{
+        } else {
             apiHelper.SetDisplayMessage("The client fails to connect the server");
         }
     }
@@ -39,18 +36,18 @@ public class ClientProcessor {
     /**
      * This function will be called when a message is received through the network
      *
-     * @param argJsonObject
+     * @param argJsonObject The json object received
      */
     public static void ProcessNetworkMessage(JsonObject argJsonObject) {
-        switch (argJsonObject.get("command")) {
+        switch (argJsonObject.get("command").toString()) {
             case "INVALID_MESSAGE":
-                apiHelper.SetDisplayMessage(argJsonObject.get("info"));
+                apiHelper.SetDisplayMessage(argJsonObject.get("info").toString());
                 break;
             case "AUTHENTICATION_FAIL":
                 apiHelper.CloseConnection();
                 break;
             case "LOGIN_SUCCESS":
-                apiHelper.SetDisplayMessage(argJsonObject.get("info"));
+                apiHelper.SetDisplayMessage(argJsonObject.get("info").toString());
                 break;
             case "LOGIN_FAILED":
                 apiHelper.SetDisplayMessage("Failed to log in: " + argJsonObject.get("info"));
@@ -60,15 +57,13 @@ public class ClientProcessor {
                 apiHelper.SetDisplayMessage(argJsonObject);
                 break;
             case "REDIRECT":
-                apiHelper.SetDisplayMessage("Redirected to host:" + argJsonObject.get("hostname")
-                        + " prot:" + argJsonObject.get("port"));
+                apiHelper.SetDisplayMessage("Redirected to host:" + argJsonObject.get("hostname") + " prot:" + argJsonObject.get("port"));
                 break;
             case "REGISTER_FAILED":
-                apiHelper.SetDisplayMessage("Failed to register because " +
-                        argJsonObject.get("info"));
+                apiHelper.SetDisplayMessage("Failed to register because " + argJsonObject.get("info"));
                 break;
             case "REGISTER_SUCCESS":
-                apiHelper.SetDisplayMessage(argJsonObject.get("info"));
+                apiHelper.SetDisplayMessage(argJsonObject.get("info").toString());
                 break;
             default:
         }
@@ -77,10 +72,10 @@ public class ClientProcessor {
     /**
      * This function will be called when a message is received through the GUI
      *
-     * @param argJsonObject
+     * @param argJsonObject The json object received
      */
     public static void ProcessUserMessage(JsonObject argJsonObject) {
-        switch (argJsonObject.get("command")){
+        switch (argJsonObject.get("command").toString()) {
             case "REGISTER":
                 apiHelper.SendRegRequest(argJsonObject);
                 //apiHelper.SendRegRequest(argJsonObject.get("username"),argJsonObject.get("secret"));
