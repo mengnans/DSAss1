@@ -59,4 +59,13 @@ public class ClientItem extends Thread {
         formWindowItem.setOutputText(argMessageObject);
     }
 
+    /**
+     * Show given json object on screen
+     *
+     * @param argMessage The json message object
+     */
+    public void SetDisplay(String argMessage) {
+        formWindowItem.setOutputText(argMessage);
+    }
+
 }

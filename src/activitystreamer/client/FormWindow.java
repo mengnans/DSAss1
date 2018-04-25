@@ -80,6 +80,12 @@ public class FormWindow extends JFrame implements ActionListener {
         outputText.repaint();
     }
 
+    public void setOutputText(final String argMessage) {
+        outputText.setText(argMessage);
+        outputText.revalidate();
+        outputText.repaint();
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == sendButton) {

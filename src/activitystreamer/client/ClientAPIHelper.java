@@ -31,6 +31,15 @@ public class ClientAPIHelper {
     }
 
     /**
+     * Show given json object on screen
+     *
+     * @param argMessage The String message object
+     */
+    public void SetDisplayMessage(String argMessage) {
+        clientItem.SetDisplay(argMessage);
+    }
+
+    /**
      * Send the json object to the server
      *
      * @param activityObject The json message object
