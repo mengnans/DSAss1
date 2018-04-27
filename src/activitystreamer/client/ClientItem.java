@@ -1,6 +1,5 @@
 package activitystreamer.client;
 
-import activitystreamer.server.ServerItem;
 import activitystreamer.util.JsonHelper;
 import activitystreamer.util.Settings;
 import org.apache.logging.log4j.LogManager;
@@ -62,11 +61,11 @@ public class ClientItem extends Thread {
 
     public void disconnect() {
         term = true;
-        //socket.close();
     }
 
     public void run() {
         try {
+            ClientProcessor.ProcessConnection();
             String data;
             while (!term && (data = inreader.readLine()) != null) {
                 JsonObject _json = JsonHelper.StringToObject(data);
