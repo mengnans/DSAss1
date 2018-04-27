@@ -57,6 +57,21 @@ public class ClientCommandHelper {
         if (cmd.hasOption("u")) {
             Settings.setUsername(cmd.getOptionValue("u"));
         }
+
+        /*
+        if (cmd.hasOption("u")) {
+            if(cmd.hasOption("s")){
+                Settings.setUsername(cmd.getOptionValue("u"));
+                Settings.setSecret(cmd.getOptionValue("s"));
+            }else{
+                Settings.setSecret("abc");
+            }
+        }
+        else{
+            Settings.setUsername("anonymous");
+            Settings.setSecret("");
+        }
+        */
     }
 
 }

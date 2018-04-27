@@ -50,7 +50,8 @@ public class ClientProcessor {
                 apiHelper.SetDisplayMessage(argJsonObject);
                 break;
             case "REDIRECT":
-                apiHelper.SetDisplayMessage("Redirected to host:" + argJsonObject.get("hostname") + " prot:" + argJsonObject.get("port"));
+                apiHelper.SetDisplayMessage("Redirected to host:" + argJsonObject.get("hostname")
+                        + " prot:" + argJsonObject.get("port"));
                 break;
             case "REGISTER_FAILED":
                 apiHelper.SetDisplayMessage("Failed to register because " + argJsonObject.get("info"));
@@ -86,5 +87,10 @@ public class ClientProcessor {
                 //apiHelper.InvalidMessage(argJsonObject);
                 break;
         }
+        /*
+        if(the formWindow is closed){
+            apiHelper.CloseConnection();
+        }
+        */
     }
 }

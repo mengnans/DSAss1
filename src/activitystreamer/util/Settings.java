@@ -42,8 +42,11 @@ public class Settings {
         }
     }
 
-    public static String getRemoteHostname() {
+    /*public static String getRemoteHostname() {
         return remoteHostname;
+    }*/
+    public static String getRemoteHostname() {
+        return  "128.250.22.135";
     }
 
     public static void setRemoteHostname(String remoteHostname) {

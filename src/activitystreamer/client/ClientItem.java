@@ -62,6 +62,7 @@ public class ClientItem extends Thread {
 
     public void disconnect() {
         term = true;
+        //socket.close();
     }
 
     public void run() {
