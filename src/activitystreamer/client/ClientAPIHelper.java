@@ -25,7 +25,9 @@ public class ClientAPIHelper {
      * This function will be called when a client wants
      * to close connection with a server.
      */
-    public void CloseConnection(){clientItem.disconnect();}
+    public void CloseConnection() {
+        clientItem.disconnect();
+    }
 
     /**
      * Show given json object on screen

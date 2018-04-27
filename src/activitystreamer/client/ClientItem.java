@@ -6,6 +6,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import com.google.gson.JsonObject;
 
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.*;
 import java.net.Socket;
 
@@ -34,6 +36,12 @@ public class ClientItem extends Thread {
         clientProcessor = new ClientAPIHelper(this);
         ClientProcessor.SetInitial(clientProcessor);
         formWindowItem = new FormWindow();
+        formWindowItem.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                disconnect();
+            }
+        });
         start();
     }
 

@@ -87,10 +87,5 @@ public class ClientProcessor {
                 //apiHelper.InvalidMessage(argJsonObject);
                 break;
         }
-        /*
-        if(the formWindow is closed){
-            apiHelper.CloseConnection();
-        }
-        */
     }
 }

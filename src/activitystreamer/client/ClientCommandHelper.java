@@ -58,7 +58,7 @@ public class ClientCommandHelper {
             Settings.setUsername(cmd.getOptionValue("u"));
         }
 
-        /*
+
         if (cmd.hasOption("u")) {
             if(cmd.hasOption("s")){
                 Settings.setUsername(cmd.getOptionValue("u"));
@@ -71,7 +71,7 @@ public class ClientCommandHelper {
             Settings.setUsername("anonymous");
             Settings.setSecret("");
         }
-        */
+
     }
 
 }
