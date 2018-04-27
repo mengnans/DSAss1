@@ -50,6 +50,7 @@ public class ClientProcessor {
                 apiHelper.SetDisplayMessage(argJsonObject);
                 break;
             case "REDIRECT":
+                //这里功能不全，除了显示结果，还应该解析数据，并且连接到新的服务器上
                 apiHelper.SetDisplayMessage("Redirected to host:" + argJsonObject.get("hostname")
                         + " prot:" + argJsonObject.get("port"));
                 break;
@@ -57,6 +58,7 @@ public class ClientProcessor {
                 apiHelper.SetDisplayMessage("Failed to register because " + argJsonObject.get("info"));
                 break;
             case "REGISTER_SUCCESS":
+                //注册成功了是不是应该直接登陆上？
                 apiHelper.SetDisplayMessage(argJsonObject.get("info").toString());
                 break;
             default:
