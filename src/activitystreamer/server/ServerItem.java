@@ -14,6 +14,11 @@ import activitystreamer.util.Settings;
 public class ServerItem extends Thread {
     private static final Logger log = LogManager.getLogger();
     private static ArrayList<ServerConnection> connections;
+    private static ArrayList<JsonObject> connectingClient;
+    private static ArrayList<JsonObject> ClientResigterInfo;
+    private static ArrayList<JsonObject> ServerAnnounceInfo;
+    private static ArrayList<JsonObject> activityMessageQue;
+    private static ArrayList<ServerConnection> resigterQue;
     private static boolean term = false;
     private static ServerListener listener;
 
@@ -26,8 +31,23 @@ public class ServerItem extends Thread {
         return serverItem;
     }
 
-    public final ArrayList<ServerConnection> getConnections() {
+    public static ArrayList<ServerConnection> getConnections() {
         return connections;
+    }
+    public static ArrayList<JsonObject> getConnectingClient(){
+        return connectingClient;
+    }
+    public static ArrayList<JsonObject> getClientResigterInfo(){
+        return ClientResigterInfo;
+    }
+    public static ArrayList<JsonObject> getServerAnnounceInfo(){
+        return ServerAnnounceInfo;
+    }
+    public static ArrayList<JsonObject> getActivityMessageQue(){
+        return activityMessageQue;
+    }
+    public static ArrayList<ServerConnection> getResigterQue(){
+        return resigterQue;
     }
 
     private ServerItem() {
@@ -35,25 +55,27 @@ public class ServerItem extends Thread {
         connections = new ArrayList<ServerConnection>();
         // start a listener
         try {
-            ConnectToServer();
             listener = new ServerListener();
         } catch (IOException e1) {
             log.fatal("failed to startup a listening thread: " + e1);
             System.exit(-1);
         }
+        start();
     }
 
     @Override
     public void run() {
         log.info("using activity interval of " + Settings.getActivityInterval() + " milliseconds");
+        ConnectToServer();
         while (!term) {
+            // do something with 5 second intervals in between
+            ServerProcessor.ProcessServerAnnounce(connections);
             try {
                 Thread.sleep(Settings.getActivityInterval());
             } catch (InterruptedException e) {
                 log.info("received an interrupt, system is shutting down");
                 break;
             }
-            // do something with 5 second intervals in between
 
         }
         log.info("closing " + connections.size() + " connections");
@@ -71,13 +93,12 @@ public class ServerItem extends Thread {
         log.debug("Received a new connection: " + Settings.socketAddress(s));
         ServerConnection _connection = new ServerConnection(s);
         connections.add(_connection);
-        ServerProcessor.ProcessNewConnectionMessage(_connection);
     }
 
     public synchronized boolean ReceivedMessage(ServerConnection argConnection, String argMessageObject) {
         log.debug("Received a new message: " + argMessageObject);
         JsonObject _jsonObject = JsonHelper.StringToObject(argMessageObject);
-        return ServerProcessor.ProcessNetworkMessage(argConnection, _jsonObject);
+        return ServerProcessor.ProcessNetworkMessage(argConnection, _jsonObject, connections);
     }
 
     public synchronized void ConnectToServer() {
@@ -87,8 +108,9 @@ public class ServerItem extends Thread {
                 Socket _socket = new Socket(Settings.getRemoteHostname(), Settings.getRemotePort());
                 log.debug("Connected to another server: " + Settings.socketAddress(_socket));
                 ServerConnection _connection = new ServerConnection(_socket);
+                _connection.setConnectionType("withServer");
                 connections.add(_connection);
-                ServerProcessor.ProcessConnectToServerMessage(_connection);
+                ServerProcessor.ProcessConnectToServer(_connection);
             } catch (IOException e) {
                 log.error("failed to make connection to " + Settings.getRemoteHostname() + ":" + Settings.getRemotePort() + " :" + e);
                 System.exit(-1);

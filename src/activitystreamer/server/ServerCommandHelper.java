@@ -90,7 +90,7 @@ public class ServerCommandHelper {
         }
 
         if (cmd.hasOption("s")) {
-            Settings.setSecret(cmd.getOptionValue("s"));
+            Settings.setServerSecret(cmd.getOptionValue("s"));
         }
     }
 }

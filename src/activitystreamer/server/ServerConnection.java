@@ -22,6 +22,7 @@ public class ServerConnection extends Thread {
     private BufferedReader inreader;
     private PrintWriter outwriter;
     private boolean open = false;
+    private String connectionType="withClient";
 
     private Socket socket;
 
@@ -37,6 +38,12 @@ public class ServerConnection extends Thread {
         start();
     }
 
+    public void setConnectionType(String type){
+        connectionType=type;
+    }
+    public String getConnectionType(){
+        return connectionType;
+    }
     public boolean isOpen() {
         return open;
     }
@@ -80,6 +87,7 @@ public class ServerConnection extends Thread {
                 term = true;
                 inreader.close();
                 out.close();
+                ServerItem.getInstance().connectionClosed(this);
             } catch (IOException e) {
                 // already closed?
                 log.error("received exception closing the connection " + Settings.socketAddress(socket) + ": " + e);
