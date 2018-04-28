@@ -33,31 +33,22 @@ public class ClientProcessor {
      */
     public static void ProcessNetworkMessage(JsonObject argJsonObject) {
         switch (argJsonObject.get("command").toString()) {
-            // I have no idea why there is two " at the begin and the end of the string
-            // I spent half hour and this is the only solution works
-            // That's why I hate java
-            case "INVALID_MESSAGE":
             case "\"INVALID_MESSAGE\"":
                 apiHelper.SetDisplayMessage(argJsonObject.get("info").toString());
                 break;
-            case "AUTHENTICATION_FAIL":
             case "\"AUTHENTICATION_FAIL\"":
                 apiHelper.CloseConnection();
                 break;
-            case "LOGIN_SUCCESS":
             case "\"LOGIN_SUCCESS\"":
                 apiHelper.SetDisplayMessage(argJsonObject.get("info").toString());
                 break;
-            case "LOGIN_FAILED":
             case "\"LOGIN_FAILED\"":
                 apiHelper.SetDisplayMessage("Failed to log in: " + argJsonObject.get("info"));
                 apiHelper.CloseConnection();
                 break;
-            case "ACTIVITY_BROADCAST":
             case "\"ACTIVITY_BROADCAST\"":
                 apiHelper.SetDisplayMessage(argJsonObject);
                 break;
-            case "REDIRECT":
             case "\"REDIRECT\"":
                 apiHelper.SetDisplayMessage("Redirected to host:" + argJsonObject.get("hostname") + " prot:" + argJsonObject.get("port"));
                 apiHelper.CloseConnection();
@@ -78,11 +69,9 @@ public class ClientProcessor {
                 }
 
                 break;
-            case "REGISTER_FAILED":
             case "\"REGISTER_FAILED\"":
                 apiHelper.SetDisplayMessage("Failed to register because " + argJsonObject.get("info"));
                 break;
-            case "REGISTER_SUCCESS":
             case "\"REGISTER_SUCCESS\"":
                 apiHelper.SetDisplayMessage(argJsonObject.get("info").toString());
                 JsonObject logInJsonObject = new JsonObject();
@@ -103,23 +92,16 @@ public class ClientProcessor {
     public static void ProcessUserMessage(JsonObject argJsonObject) {
         String _command = argJsonObject.get("command").toString();
         switch (_command) {
-            // I have no idea why there is two " at the begin and the end of the string
-            // I spent half hour and this is the only solution works
-            // That's why I hate java
-            case "REGISTER":
             case "\"REGISTER\"":
                 apiHelper.SendMessage(argJsonObject);
                 break;
-            case "LOGIN":
             case "\"LOGIN\"":
                 apiHelper.SendMessage(argJsonObject);
                 break;
-            case "LOGOUT":
             case "\"LOGOUT\"":
                 apiHelper.SendMessage(argJsonObject);
                 apiHelper.CloseConnection();
                 break;
-            case "ACTIVITY_MESSAGE":
             case "\"ACTIVITY_MESSAGE\"":
                 apiHelper.SendMessage(argJsonObject);
                 break;
