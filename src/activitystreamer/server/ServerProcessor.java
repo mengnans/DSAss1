@@ -13,7 +13,6 @@ public class ServerProcessor {
     private static boolean isLockDenied = false;
     private static int numOfConnectingServer = 0;
     private static int numOfLockResponse = 0;
-    private static int connectingCount=0;
     private static ServerAPIHelper apiHelper = new ServerAPIHelper();
     private static JsonObject AUTHENTICATE = new JsonObject();
     private static JsonObject INVALID_MESSAGE = new JsonObject();
@@ -90,6 +89,24 @@ public class ServerProcessor {
         }
     }
 
+    public static boolean checkAlreadyLogin(JsonObject argObject, ArrayList<JsonObject> connectingClient){
+    	for(JsonObject temObject:connectingClient){
+			if(argObject.get("username").toString().equals(temObject.get("username").toString())){
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public static boolean checkAlreadyAUTHENTICATE(ServerConnection argConnection, ArrayList<String> connectingServer){
+    	for(String temStr: connectingServer){
+    		if(temStr.equals(Settings.socketAddress(argConnection.getSocket()))){
+    			return true;
+			}
+		}
+		return false;
+	}
+
     public static JsonObject balanceServerLoad() {
         int localServerLoad = ServerItem.getConnectingClient().size();
         for (JsonObject tempObject : ServerItem.getServerAnnounceInfo()) {
@@ -133,14 +150,10 @@ public class ServerProcessor {
                 //AUTHENTICATE command(from server to server)
                 case "\"AUTHENTICATE\"":
                     //used to judge whether server has already authenticate
-                    already_authenticate = false;
-                    for (ServerConnection connectionItem : connections) {
-                        if (Settings.socketAddress(connectionItem.getSocket()).equals(currentSocketAddress)) {
-                            already_authenticate = true;
-                        }
-                    }
+                    already_authenticate = checkAlreadyAUTHENTICATE(argConnection,ServerItem.getConnectingServer());
                     //server has already authenticated, send INVALID_MESSAGE
                     if (already_authenticate) {
+                    	ServerItem.getConnectingServer().remove(Settings.socketAddress(argConnection.getSocket()));
                         INVALID_MESSAGE.addProperty("command", "INVALID_MESSAGE");
                         INVALID_MESSAGE.addProperty("info", "server has already successfully authenticated");
                         apiHelper.SendMessage(argConnection, INVALID_MESSAGE);
@@ -163,6 +176,7 @@ public class ServerProcessor {
                     // authenticate success, no reply, keep connection
                     else {
                         argConnection.setConnectionType("withServer");
+                        ServerItem.getConnectingServer().add(Settings.socketAddress(argConnection.getSocket()));
                         return false;
                     }
                 case "\"INVALID_MESSAGE\"":
@@ -170,12 +184,7 @@ public class ServerProcessor {
                 case "\"AUTHENTICATION_FAIL\"":
                     return true;
                 case "\"SERVER_ANNOUNCE\"":
-                    already_authenticate = false;
-                    for (ServerConnection connectionItem : connections) {
-                        if (Settings.socketAddress(connectionItem.getSocket()).equals(currentSocketAddress)) {
-                            already_authenticate = true;
-                        }
-                    }
+                    already_authenticate = checkAlreadyAUTHENTICATE(argConnection,ServerItem.getConnectingServer());
                     //receive announcement from unauthenticated server
                     if (!already_authenticate) {
                         INVALID_MESSAGE.addProperty("command", "INVALID_MESSAGE");
@@ -272,16 +281,7 @@ public class ServerProcessor {
                     return true;
                 case "\"REGISTER\"":
                     already_register = false;
-                    already_login = false;
-					connectingCount=0;
-                    for (ServerConnection connectionItem : connections) {
-                        if (Settings.socketAddress(connectionItem.getSocket()).equals(currentSocketAddress)) {
-							connectingCount++;
-                        }
-						if(connectingCount>1){
-							already_login = true;
-						}
-                    }
+                    already_login = checkAlreadyLogin(argJsonObject,ServerItem.getConnectingClient());
                     for (JsonObject clientRegisterInfo : ServerItem.getClientResigterInfo()) {
                         if (clientRegisterInfo.get("username").toString().equals(argJsonObject.get("username").toString())) {
 							already_register = true;
@@ -289,6 +289,11 @@ public class ServerProcessor {
                     }
                     //receive register message from a client already logged in
                     if (already_login) {
+                    	for(JsonObject object:ServerItem.getConnectingClient()){
+                    		if(object.get("username").toString().equals(argJsonObject.get("username").toString())){
+                    			ServerItem.getConnectingClient().remove(object);
+							}
+						}
                         INVALID_MESSAGE.addProperty("command", "INVALID_MESSAGE");
                         INVALID_MESSAGE.addProperty("info", "you have already logged in");
                         apiHelper.SendMessage(argConnection, INVALID_MESSAGE);
@@ -323,12 +328,7 @@ public class ServerProcessor {
 
                 case "\"LOCK_REQUEST\"":
                     already_register = false;
-                    already_authenticate = false;
-                    for (ServerConnection connectionItem : connections) {
-                        if (Settings.socketAddress(connectionItem.getSocket()).equals(currentSocketAddress)) {
-                            already_authenticate = true;
-                        }
-                    }
+                    already_authenticate = checkAlreadyAUTHENTICATE(argConnection, ServerItem.getConnectingServer());
                     for (JsonObject clientRegisterInfo : ServerItem.getClientResigterInfo()) {
                         if (clientRegisterInfo.get("username").toString().equals(argJsonObject.get("username").toString())) {
                             already_register = true;
@@ -367,12 +367,7 @@ public class ServerProcessor {
                 case "\"LOCK_DENIED\"":
                     numOfLockResponse++;
                     isLockDenied = true;
-                    already_authenticate = false;
-                    for (ServerConnection connectionItem : connections) {
-                        if (Settings.socketAddress(connectionItem.getSocket()).equals(currentSocketAddress)) {
-                            already_authenticate = true;
-                        }
-                    }
+                    already_authenticate = checkAlreadyAUTHENTICATE(argConnection,ServerItem.getConnectingServer());
                     //receive message from unauthenticated server
                     if (!already_authenticate) {
                         INVALID_MESSAGE.addProperty("command", "INVALID_MESSAGE");
@@ -401,14 +396,9 @@ public class ServerProcessor {
                     }
                 case "\"LOCK_ALLOW\"":
                     numOfLockResponse++;
-                    already_authenticate = false;
-                    for (ServerConnection connectionItem : connections) {
-                        if (Settings.socketAddress(connectionItem.getSocket()).equals(currentSocketAddress)) {
-                            already_authenticate = true;
-                        }
-                    }
+                    already_authenticate = checkAlreadyAUTHENTICATE(argConnection,ServerItem.getConnectingServer());
                     //receive message from unauthenticated server
-                    if (already_authenticate) {
+                    if (!already_authenticate) {
                         INVALID_MESSAGE.addProperty("command", "INVALID_MESSAGE");
                         INVALID_MESSAGE.addProperty("info", "LOCK_REQUEST from unauthenticated server");
                         apiHelper.SendMessage(argConnection, INVALID_MESSAGE);
@@ -427,16 +417,7 @@ public class ServerProcessor {
                         return false;
                     }
                 case "\"ACTIVITY_MESSAGE\"":
-                    already_login = false;
-                    connectingCount=0;
-                    for (ServerConnection connectionItem : connections) {
-                        if (Settings.socketAddress(connectionItem.getSocket()).equals(currentSocketAddress)) {
-                            connectingCount++;
-                        }
-                        if(connectingCount>1){
-                        	already_login=true;
-						}
-                    }
+                    already_login = checkAlreadyLogin(argJsonObject,ServerItem.getConnectingClient());
                     JsonObject localStorage = apiHelper.searchObjects("username", argJsonObject.get("username").toString(), ServerItem.getClientResigterInfo());
                     //message did not have username field, send INVALID_MESSAGE
                     if (!argJsonObject.has("username") || !argJsonObject.has("secret") || !argJsonObject.has("activity")) {
@@ -453,7 +434,7 @@ public class ServerProcessor {
                         return true;
                     }
                     //client did not login
-                    else if (already_login) {
+                    else if (!already_login) {
                         AUTHENTICATION_FAIL.addProperty("command", "AUTHENTICATION_FAIL");
                         AUTHENTICATION_FAIL.addProperty("info", "you did not login");
                         apiHelper.SendMessage(argConnection, AUTHENTICATION_FAIL);
@@ -477,13 +458,8 @@ public class ServerProcessor {
                         return false;
                     }
                 case "\"ACTIVITY_BROADCAST\"":
-                    already_authenticate = false;
-                    for (ServerConnection connectionItem : connections) {
-                        if (Settings.socketAddress(connectionItem.getSocket()).equals(currentSocketAddress)) {
-                            already_authenticate = true;
-                        }
-                    }
-                    if (already_authenticate) {
+                    already_authenticate = checkAlreadyAUTHENTICATE(argConnection,ServerItem.getConnectingServer());
+                    if (!already_authenticate) {
                         INVALID_MESSAGE.addProperty("command", "INVALID_MESSAGE");
                         INVALID_MESSAGE.addProperty("info", "you are unauthenticated");
                         apiHelper.SendMessage(argConnection, INVALID_MESSAGE);

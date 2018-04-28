@@ -17,6 +17,7 @@ public class ServerItem extends Thread {
     private static ArrayList<JsonObject> connectingClient = new ArrayList<JsonObject>();
     private static ArrayList<JsonObject> ClientResigterInfo = new ArrayList<JsonObject>();
     private static ArrayList<JsonObject> ServerAnnounceInfo = new ArrayList<JsonObject>();
+    private static ArrayList<String> connectingServer =new ArrayList<String>();
     private static ArrayList<JsonObject> activityMessageQue = new ArrayList<JsonObject>();
     private static ArrayList<ServerConnection> resigterQue = new ArrayList<ServerConnection>();
     private static boolean term = false;
@@ -46,6 +47,8 @@ public class ServerItem extends Thread {
     public static ArrayList<JsonObject> getServerAnnounceInfo() {
         return ServerAnnounceInfo;
     }
+
+    public static ArrayList<String> getConnectingServer() { return connectingServer;}
 
     public static ArrayList<JsonObject> getActivityMessageQue() {
         return activityMessageQue;
@@ -115,6 +118,7 @@ public class ServerItem extends Thread {
                 ServerConnection _connection = new ServerConnection(_socket);
                 _connection.setConnectionType("withServer");
                 connections.add(_connection);
+                connectingServer.add(Settings.socketAddress(_socket));
                 ServerProcessor.ProcessConnectToServer(_connection);
             } catch (IOException e) {
                 log.error("failed to make connection to " + Settings.getRemoteHostname() + ":" + Settings.getRemotePort() + " :" + e);
