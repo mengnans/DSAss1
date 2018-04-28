@@ -13,6 +13,7 @@ public class ServerProcessor {
     private static boolean isLockDenied = false;
     private static int numOfConnectingServer = 0;
     private static int numOfLockResponse = 0;
+    private static int connectingCount=0;
     private static ServerAPIHelper apiHelper = new ServerAPIHelper();
     private static JsonObject AUTHENTICATE = new JsonObject();
     private static JsonObject INVALID_MESSAGE = new JsonObject();
@@ -272,14 +273,18 @@ public class ServerProcessor {
                 case "\"REGISTER\"":
                     already_register = false;
                     already_login = false;
+					connectingCount=0;
                     for (ServerConnection connectionItem : connections) {
                         if (Settings.socketAddress(connectionItem.getSocket()).equals(currentSocketAddress)) {
-                            already_login = true;
+							connectingCount++;
                         }
+						if(connectingCount>1){
+							already_login = true;
+						}
                     }
                     for (JsonObject clientRegisterInfo : ServerItem.getClientResigterInfo()) {
                         if (clientRegisterInfo.get("username").toString().equals(argJsonObject.get("username").toString())) {
-                            already_register = true;
+							already_register = true;
                         }
                     }
                     //receive register message from a client already logged in
@@ -315,6 +320,7 @@ public class ServerProcessor {
                         ProcessLockRelatedMessage(connections, LOCK_REQUEST);
                         return false;
                     }
+
                 case "\"LOCK_REQUEST\"":
                     already_register = false;
                     already_authenticate = false;
@@ -422,10 +428,14 @@ public class ServerProcessor {
                     }
                 case "\"ACTIVITY_MESSAGE\"":
                     already_login = false;
+                    connectingCount=0;
                     for (ServerConnection connectionItem : connections) {
                         if (Settings.socketAddress(connectionItem.getSocket()).equals(currentSocketAddress)) {
-                            already_login = true;
+                            connectingCount++;
                         }
+                        if(connectingCount>1){
+                        	already_login=true;
+						}
                     }
                     JsonObject localStorage = apiHelper.searchObjects("username", argJsonObject.get("username").toString(), ServerItem.getClientResigterInfo());
                     //message did not have username field, send INVALID_MESSAGE
