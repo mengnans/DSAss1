@@ -14,7 +14,7 @@ public class Settings {
     private static String serverSecret = nextSecret();
     private static int localPort = 3780;
     private static String localHostname = "localhost";
-    private static String remoteHostname = null;
+    private static String remoteHostname = "localhost";
     private static int remotePort = 3781;
     private static String remoteServerSecret = null;
     private static int activityInterval = 5000; // milliseconds
