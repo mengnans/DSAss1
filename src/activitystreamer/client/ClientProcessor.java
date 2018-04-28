@@ -66,18 +66,17 @@ public class ClientProcessor {
 
                 JsonObject ReDirectJsonObject = new JsonObject();
                 ReDirectJsonObject.addProperty("command","REDIRECT");
-                ReDirectJsonObject.addProperty("hostname",hostName);
-                ReDirectJsonObject.addProperty("port",argJsonObject.get("port").toString());
+                ReDirectJsonObject.addProperty("username",Settings.getUsername());
+                ReDirectJsonObject.addProperty("secret",Settings.getSecret());
                 apiHelper.SendMessage(ReDirectJsonObject);
 
-                /*
                 boolean isConnection = apiHelper.SetConnection(hostName,port);
                 if (isConnection) {
                     apiHelper.SetDisplayMessage("The client successfully connects to the server: "+hostName);
                 } else {
                     apiHelper.SetDisplayMessage("The client fails to connect the server");
                 }
-                */
+
                 break;
             case "REGISTER_FAILED":
             case "\"REGISTER_FAILED\"":
