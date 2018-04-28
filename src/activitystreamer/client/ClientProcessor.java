@@ -70,20 +70,24 @@ public class ClientProcessor {
      * @param argJsonObject The json object received
      */
     public static void ProcessUserMessage(JsonObject argJsonObject) {
-        String _command = argJsonObject.get("command").toString();
-        System.out.println(_command);
+        Object _message = argJsonObject.get("command");
+        String _command = _message.toString();
         switch (_command) {
             case "REGISTER":
+            case "\"REGISTER\"":
                 apiHelper.SendMessage(argJsonObject);
                 break;
             case "LOGIN":
+            case "\"LOGIN\"":
                 apiHelper.SendMessage(argJsonObject);
                 break;
             case "LOGOUT":
+            case "\"LOGOUT\"":
                 apiHelper.SendMessage(argJsonObject);
                 apiHelper.CloseConnection();
                 break;
             case "ACTIVITY_MESSAGE":
+            case "\"ACTIVITY_MESSAGE\"":
                 apiHelper.SendMessage(argJsonObject);
                 break;
             default:
