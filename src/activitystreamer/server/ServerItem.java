@@ -13,12 +13,12 @@ import activitystreamer.util.Settings;
 
 public class ServerItem extends Thread {
     private static final Logger log = LogManager.getLogger();
-    private static ArrayList<ServerConnection> connections;
-    private static ArrayList<JsonObject> connectingClient;
-    private static ArrayList<JsonObject> ClientResigterInfo;
-    private static ArrayList<JsonObject> ServerAnnounceInfo;
-    private static ArrayList<JsonObject> activityMessageQue;
-    private static ArrayList<ServerConnection> resigterQue;
+    private static ArrayList<ServerConnection> connections = new ArrayList<ServerConnection>();
+    private static ArrayList<JsonObject> connectingClient = new ArrayList<JsonObject>();
+    private static ArrayList<JsonObject> ClientResigterInfo = new ArrayList<JsonObject>();
+    private static ArrayList<JsonObject> ServerAnnounceInfo = new ArrayList<JsonObject>();
+    private static ArrayList<JsonObject> activityMessageQue = new ArrayList<JsonObject>();
+    private static ArrayList<ServerConnection> resigterQue = new ArrayList<ServerConnection>();
     private static boolean term = false;
     private static ServerListener listener;
 
