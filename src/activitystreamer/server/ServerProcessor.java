@@ -36,7 +36,7 @@ public class ServerProcessor {
     public static void ProcessConnectToServer(ServerConnection argConnection) {
         //send authenticate json object to other server
         AUTHENTICATE.addProperty("command", "AUTHENTICATE");
-        AUTHENTICATE.addProperty("secret", Settings.getRemoteServerSecret());
+        AUTHENTICATE.addProperty("secret", Settings.getSecret());
         apiHelper.SendMessage(argConnection, AUTHENTICATE);
     }
 
@@ -167,7 +167,7 @@ public class ServerProcessor {
                         return true;
                     }
                     //secret is incorrect
-                    else if (!Settings.getRemoteServerSecret().equals(argJsonObject.get("secret").toString())) {
+                    else if (!Settings.getSecret().equals(argJsonObject.get("secret").toString())) {
                         AUTHENTICATION_FAIL.addProperty("command", "AUTHENTICATION_FAIL");
                         AUTHENTICATION_FAIL.addProperty("info", "the supplied secret is incorrect : " + argJsonObject.get("secret").toString());
                         apiHelper.SendMessage(argConnection, AUTHENTICATION_FAIL);
@@ -319,7 +319,7 @@ public class ServerProcessor {
                         ServerItem.getClientResigterInfo().add(regClient);
                         ServerItem.getResigterQue().add(argConnection);
 
-                        LOCK_REQUEST.addProperty("command", "ProcessLockRequest");
+                        LOCK_REQUEST.addProperty("command", "LOCK_REQUEST");
                         LOCK_REQUEST.addProperty("username", argJsonObject.get("username").toString());
                         LOCK_REQUEST.addProperty("secret", argJsonObject.get("secret").toString());
                         ProcessLockRelatedMessage(connections, LOCK_REQUEST);
