@@ -5,8 +5,6 @@ import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -18,20 +16,13 @@ import javax.swing.border.Border;
 
 import activitystreamer.util.JsonHelper;
 import com.google.gson.*;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 
 @SuppressWarnings("serial")
 public class FormWindow extends JFrame implements ActionListener {
-    private static final Logger log = LogManager.getLogger();
     private JTextArea inputText;
     private JTextArea outputText;
     private JButton sendButton;
     private JButton disconnectButton;
-    private JSONParser parser = new JSONParser();
 
     public FormWindow() {
         setTitle("ActivityStreamer Text I/O");
@@ -59,7 +50,6 @@ public class FormWindow extends JFrame implements ActionListener {
         inputPanel.add(buttonGroup, BorderLayout.SOUTH);
         sendButton.addActionListener(this);
         disconnectButton.addActionListener(this);
-
 
         outputText = new JTextArea();
         scrollPane = new JScrollPane(outputText);
