@@ -34,19 +34,24 @@ public class ServerItem extends Thread {
     public static ArrayList<ServerConnection> getConnections() {
         return connections;
     }
-    public static ArrayList<JsonObject> getConnectingClient(){
+
+    public static ArrayList<JsonObject> getConnectingClient() {
         return connectingClient;
     }
-    public static ArrayList<JsonObject> getClientResigterInfo(){
+
+    public static ArrayList<JsonObject> getClientResigterInfo() {
         return ClientResigterInfo;
     }
-    public static ArrayList<JsonObject> getServerAnnounceInfo(){
+
+    public static ArrayList<JsonObject> getServerAnnounceInfo() {
         return ServerAnnounceInfo;
     }
-    public static ArrayList<JsonObject> getActivityMessageQue(){
+
+    public static ArrayList<JsonObject> getActivityMessageQue() {
         return activityMessageQue;
     }
-    public static ArrayList<ServerConnection> getResigterQue(){
+
+    public static ArrayList<ServerConnection> getResigterQue() {
         return resigterQue;
     }
 
