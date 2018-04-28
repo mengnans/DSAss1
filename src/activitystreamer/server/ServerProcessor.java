@@ -130,7 +130,7 @@ public class ServerProcessor {
             // parse command
             switch (argJsonObject.get("command").toString()) {
                 //AUTHENTICATE command(from server to server)
-                case "AUTHENTICATE":
+                case "\"AUTHENTICATE\"":
                     //used to judge whether server has already authenticate
                     already_authenticate = false;
                     for (ServerConnection connectionItem : connections) {
@@ -164,11 +164,11 @@ public class ServerProcessor {
                         argConnection.setConnectionType("withServer");
                         return false;
                     }
-                case "INVALID_MESSAGE":
+                case "\"INVALID_MESSAGE\"":
                     return true;
-                case "AUTHENTICATION_FAIL":
+                case "\"AUTHENTICATION_FAIL\"":
                     return true;
-                case "SERVER_ANNOUNCE":
+                case "\"SERVER_ANNOUNCE\"":
                     already_authenticate = false;
                     for (ServerConnection connectionItem : connections) {
                         if (Settings.socketAddress(connectionItem.getSocket()).equals(currentSocketAddress)) {
@@ -195,7 +195,7 @@ public class ServerProcessor {
                         return false;
                     }
 
-                case "LOGIN":
+                case "\"LOGIN\"":
                     already_register = false;
                     JsonObject localObject = apiHelper.searchObjects("username", argJsonObject.get("username").toString(), ServerItem.getClientResigterInfo());
                     for (JsonObject clientRegisterInfo : ServerItem.getClientResigterInfo()) {
@@ -261,15 +261,15 @@ public class ServerProcessor {
                         }
                         return false;
                     }
-                case "REDIRECT":
+                case "\"REDIRECT\"":
                     JsonObject Client = new JsonObject();
                     Client.addProperty("username", argJsonObject.get("username").toString());
                     Client.addProperty("secret", argJsonObject.get("secret").toString());
                     ServerItem.getConnectingClient().add(Client);
                     return false;
-                case "LOGOUT":
+                case "\"LOGOUT\"":
                     return true;
-                case "REGISTER":
+                case "\"REGISTER\"":
                     already_register = false;
                     already_login = false;
                     for (ServerConnection connectionItem : connections) {
@@ -315,7 +315,7 @@ public class ServerProcessor {
                         ProcessLockRelatedMessage(connections, LOCK_REQUEST);
                         return false;
                     }
-                case "LOCK_REQUEST":
+                case "\"LOCK_REQUEST\"":
                     already_register = false;
                     already_authenticate = false;
                     for (ServerConnection connectionItem : connections) {
@@ -358,7 +358,7 @@ public class ServerProcessor {
                         ProcessLockRelatedMessage(connections, LOCK_ALLOWED);
                         return false;
                     }
-                case "LOCK_DENIED":
+                case "\"LOCK_DENIED\"":
                     numOfLockResponse++;
                     isLockDenied = true;
                     already_authenticate = false;
@@ -393,7 +393,7 @@ public class ServerProcessor {
                             }
                         }
                     }
-                case "LOCK_ALLOW":
+                case "\"LOCK_ALLOW\"":
                     numOfLockResponse++;
                     already_authenticate = false;
                     for (ServerConnection connectionItem : connections) {
@@ -420,7 +420,7 @@ public class ServerProcessor {
                         ProcessRegisterSuccessMessage(argJsonObject, connections);
                         return false;
                     }
-                case "ACTIVITY_MESSAGE":
+                case "\"ACTIVITY_MESSAGE\"":
                     already_login = false;
                     for (ServerConnection connectionItem : connections) {
                         if (Settings.socketAddress(connectionItem.getSocket()).equals(currentSocketAddress)) {
@@ -466,7 +466,7 @@ public class ServerProcessor {
                         }
                         return false;
                     }
-                case "ACTIVITY_BROADCAST":
+                case "\"ACTIVITY_BROADCAST\"":
                     already_authenticate = false;
                     for (ServerConnection connectionItem : connections) {
                         if (Settings.socketAddress(connectionItem.getSocket()).equals(currentSocketAddress)) {
