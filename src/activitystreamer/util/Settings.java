@@ -10,16 +10,14 @@ import org.apache.logging.log4j.Logger;
 public class Settings {
     private static final Logger log = LogManager.getLogger();
     private static SecureRandom random = new SecureRandom();
-    private static String serverID = nextServerID();
-    private static String serverSecret = nextSecret();
     private static int localPort = 3780;
     private static String localHostname = "localhost";
     private static String remoteHostname = "localhost";
     private static int remotePort = 3781;
-    private static String remoteServerSecret = null;
     private static int activityInterval = 5000; // milliseconds
     private static String secret = null;
     private static String username = "anonymous";
+	private static String serverID = nextServerID();
 
     public static void setServerID(String ID) {
         serverID = serverID;
@@ -27,22 +25,6 @@ public class Settings {
 
     public static String getServerID() {
         return serverID;
-    }
-
-    public static void setServerSecret(String Ssecret) {
-        serverSecret = Ssecret;
-    }
-
-    public static String getServerSecret() {
-        return serverSecret;
-    }
-
-    public static void setRemoteServerSecret(String rs) {
-        remoteServerSecret = rs;
-    }
-
-    public static String getRemoteServerSecret() {
-        return remoteServerSecret;
     }
 
     public static int getLocalPort() {
