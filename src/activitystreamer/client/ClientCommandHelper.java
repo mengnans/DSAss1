@@ -49,15 +49,13 @@ public class ClientCommandHelper {
                 help(options);
             }
         }
-
+        /*
         if (cmd.hasOption("s")) {
             Settings.setSecret(cmd.getOptionValue("s"));
         }
 
         if (cmd.hasOption("u")) {
             Settings.setUsername(cmd.getOptionValue("u"));
-        }
-
 
         if (cmd.hasOption("u")) {
             if(cmd.hasOption("s")){
@@ -71,7 +69,18 @@ public class ClientCommandHelper {
             Settings.setUsername("anonymous");
             Settings.setSecret("");
         }
-
+        */
+        if (cmd.hasOption("u")) {
+            Settings.setUsername(cmd.getOptionValue("u"));
+            if(cmd.hasOption("s")){
+                Settings.setSecret(cmd.getOptionValue("s"));
+            }else{
+                Settings.setSecret("abc");
+            }
+        }
+        else{
+            Settings.setUsername("anonymous");
+            Settings.setSecret("");
+        }
     }
-
 }
