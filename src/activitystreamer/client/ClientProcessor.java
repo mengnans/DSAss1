@@ -61,6 +61,14 @@ public class ClientProcessor {
             case "\"REDIRECT\"":
                 //这里功能不全，除了显示结果，还应该解析数据，并且连接到新的服务器上
                 apiHelper.SetDisplayMessage("Redirected to host:" + argJsonObject.get("hostname") + " prot:" + argJsonObject.get("port"));
+                String hostName = argJsonObject.get("hostname").toString();
+                int port = Integer.parseInt(argJsonObject.get("port").toString());
+                boolean isConnection = apiHelper.SetConnection(hostName,port);
+                if (isConnection) {
+                    apiHelper.SetDisplayMessage("The client successfully connects to the server: "+hostName);
+                } else {
+                    apiHelper.SetDisplayMessage("The client fails to connect the server");
+                }
                 break;
             case "REGISTER_FAILED":
             case "\"REGISTER_FAILED\"":
