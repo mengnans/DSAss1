@@ -90,7 +90,6 @@ public class FormWindow extends JFrame implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        System.out.println("Button clicked");
         if (e.getSource() == sendButton) {
             String msg = inputText.getText().trim().replaceAll("\r", "").replaceAll("\n", "").replaceAll("\t", "");
             ClientItem.getInstance().ProcessUserMessage(JsonHelper.StringToObject(msg));

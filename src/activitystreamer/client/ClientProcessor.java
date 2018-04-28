@@ -81,8 +81,9 @@ public class ClientProcessor {
      * @param argJsonObject The json object received
      */
     public static void ProcessUserMessage(JsonObject argJsonObject) {
-        Object _message = argJsonObject.get("command");
+        Object _message = argJsonObject.get("command").toString().replace("\"", "");
         String _command = _message.toString();
+        System.out.println(_command);
         switch (_command) {
             // I have no idea why there is two " at the begin and the end of the string
             // I spent half hour and this is the only solution works
