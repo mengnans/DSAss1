@@ -78,6 +78,11 @@ public class ClientProcessor {
             case "\"REGISTER_SUCCESS\"":
                 //注册成功了是不是应该直接登陆上？
                 apiHelper.SetDisplayMessage(argJsonObject.get("info").toString());
+                JsonObject logInJsonObject = new JsonObject();
+                logInJsonObject.addProperty("command","LOGIN");
+                logInJsonObject.addProperty("username",Settings.getUsername());
+                logInJsonObject.addProperty("secret",Settings.getSecret());
+                apiHelper.SendMessage(logInJsonObject);
                 break;
             default:
         }
