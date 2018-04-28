@@ -59,16 +59,25 @@ public class ClientProcessor {
                 break;
             case "REDIRECT":
             case "\"REDIRECT\"":
-                //这里功能不全，除了显示结果，还应该解析数据，并且连接到新的服务器上
                 apiHelper.SetDisplayMessage("Redirected to host:" + argJsonObject.get("hostname") + " prot:" + argJsonObject.get("port"));
+                apiHelper.CloseConnection();
                 String hostName = argJsonObject.get("hostname").toString();
                 int port = Integer.parseInt(argJsonObject.get("port").toString());
+
+                JsonObject ReDirectJsonObject = new JsonObject();
+                ReDirectJsonObject.addProperty("command","REDIRECT");
+                ReDirectJsonObject.addProperty("hostname",hostName);
+                ReDirectJsonObject.addProperty("port",argJsonObject.get("port").toString());
+                apiHelper.SendMessage(ReDirectJsonObject);
+
+                /*
                 boolean isConnection = apiHelper.SetConnection(hostName,port);
                 if (isConnection) {
                     apiHelper.SetDisplayMessage("The client successfully connects to the server: "+hostName);
                 } else {
                     apiHelper.SetDisplayMessage("The client fails to connect the server");
                 }
+                */
                 break;
             case "REGISTER_FAILED":
             case "\"REGISTER_FAILED\"":
@@ -76,7 +85,6 @@ public class ClientProcessor {
                 break;
             case "REGISTER_SUCCESS":
             case "\"REGISTER_SUCCESS\"":
-                //注册成功了是不是应该直接登陆上？
                 apiHelper.SetDisplayMessage(argJsonObject.get("info").toString());
                 JsonObject logInJsonObject = new JsonObject();
                 logInJsonObject.addProperty("command","LOGIN");
