@@ -51,8 +51,7 @@ public class ClientProcessor {
                 break;
             case "REDIRECT":
                 //这里功能不全，除了显示结果，还应该解析数据，并且连接到新的服务器上
-                apiHelper.SetDisplayMessage("Redirected to host:" + argJsonObject.get("hostname")
-                        + " prot:" + argJsonObject.get("port"));
+                apiHelper.SetDisplayMessage("Redirected to host:" + argJsonObject.get("hostname") + " prot:" + argJsonObject.get("port"));
                 break;
             case "REGISTER_FAILED":
                 apiHelper.SetDisplayMessage("Failed to register because " + argJsonObject.get("info"));
@@ -71,7 +70,9 @@ public class ClientProcessor {
      * @param argJsonObject The json object received
      */
     public static void ProcessUserMessage(JsonObject argJsonObject) {
-        switch (argJsonObject.get("command").toString()) {
+        String _command = argJsonObject.get("command").toString();
+        System.out.println(_command);
+        switch (_command) {
             case "REGISTER":
                 apiHelper.SendMessage(argJsonObject);
                 break;
@@ -86,7 +87,7 @@ public class ClientProcessor {
                 apiHelper.SendMessage(argJsonObject);
                 break;
             default:
-                //apiHelper.InvalidMessage(argJsonObject);
+                apiHelper.SetDisplayMessage("Illegal message");
                 break;
         }
     }
