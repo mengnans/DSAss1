@@ -69,11 +69,11 @@ public class ServerProcessor {
         if (numOfLockResponse == numOfConnectingServer && isLockDenied == false) {
             REGISTER_SUCCESS.addProperty("command", "REGISTER_SUCCESS");
             REGISTER_SUCCESS.addProperty("info", "register success for" + argJsonObject.get("username").toString());
-            apiHelper.SendMessage(ServerItem.getResigterQue().get(0), REGISTER_SUCCESS);
+            apiHelper.SendMessage(ServerItem.getRegisterQueue().get(0), REGISTER_SUCCESS);
             numOfLockResponse = 0;
             isLockDenied = false;
-            connections.remove(ServerItem.getResigterQue().get(0));
-            ServerItem.getResigterQue().remove(0);
+            connections.remove(ServerItem.getRegisterQueue().get(0));
+            ServerItem.getRegisterQueue().remove(0);
         }
     }
 
@@ -81,11 +81,11 @@ public class ServerProcessor {
         if (numOfLockResponse == numOfConnectingServer && isLockDenied == true) {
             REGISTER_FAILED.addProperty("command", "REGISTER_FAILED");
             REGISTER_FAILED.addProperty("info", argJsonObject.get("username").toString() + "is already registered with the system");
-            apiHelper.SendMessage(ServerItem.getResigterQue().get(0), REGISTER_FAILED);
+            apiHelper.SendMessage(ServerItem.getRegisterQueue().get(0), REGISTER_FAILED);
             numOfLockResponse = 0;
             isLockDenied = false;
-            connections.remove(ServerItem.getResigterQue().get(0));
-            ServerItem.getResigterQue().remove(0);
+            connections.remove(ServerItem.getRegisterQueue().get(0));
+            ServerItem.getRegisterQueue().remove(0);
         }
     }
 
@@ -207,8 +207,8 @@ public class ServerProcessor {
 
                 case "\"LOGIN\"":
                     already_register = false;
-                    JsonObject localObject = apiHelper.searchObjects("username", argJsonObject.get("username").toString(), ServerItem.getClientResigterInfo());
-                    for (JsonObject clientRegisterInfo : ServerItem.getClientResigterInfo()) {
+                    JsonObject localObject = apiHelper.searchObjects("username", argJsonObject.get("username").toString(), ServerItem.getClientRegisterInfo());
+                    for (JsonObject clientRegisterInfo : ServerItem.getClientRegisterInfo()) {
                         if (clientRegisterInfo.get("username").toString().equals(argJsonObject.get("username").toString())) {
                             already_register = true;
                         }
@@ -282,7 +282,7 @@ public class ServerProcessor {
                 case "\"REGISTER\"":
                     already_register = false;
                     already_login = checkAlreadyLogin(argJsonObject, ServerItem.getConnectingClient());
-                    for (JsonObject clientRegisterInfo : ServerItem.getClientResigterInfo()) {
+                    for (JsonObject clientRegisterInfo : ServerItem.getClientRegisterInfo()) {
                         if (clientRegisterInfo.get("username").toString().equals(argJsonObject.get("username").toString())) {
                             already_register = true;
                         }
@@ -316,8 +316,8 @@ public class ServerProcessor {
                         JsonObject regClient = new JsonObject();
                         regClient.addProperty("username", argJsonObject.get("username").toString());
                         regClient.addProperty("secret", argJsonObject.get("secret").toString());
-                        ServerItem.getClientResigterInfo().add(regClient);
-                        ServerItem.getResigterQue().add(argConnection);
+                        ServerItem.getClientRegisterInfo().add(regClient);
+                        ServerItem.getRegisterQueue().add(argConnection);
 
                         LOCK_REQUEST.addProperty("command", "LOCK_REQUEST");
                         LOCK_REQUEST.addProperty("username", argJsonObject.get("username").toString());
@@ -329,7 +329,7 @@ public class ServerProcessor {
                 case "\"LOCK_REQUEST\"":
                     already_register = false;
                     already_authenticate = checkAlreadyAUTHENTICATE(argConnection, ServerItem.getConnectingServer());
-                    for (JsonObject clientRegisterInfo : ServerItem.getClientResigterInfo()) {
+                    for (JsonObject clientRegisterInfo : ServerItem.getClientRegisterInfo()) {
                         if (clientRegisterInfo.get("username").toString().equals(argJsonObject.get("username").toString())) {
                             already_register = true;
                         }
@@ -386,9 +386,9 @@ public class ServerProcessor {
                     }
                     //remove username from local storage
                     else {
-                        for (JsonObject registerClient : ServerItem.getClientResigterInfo()) {
+                        for (JsonObject registerClient : ServerItem.getClientRegisterInfo()) {
                             if (registerClient.get("username").toString().equals(argJsonObject.get("username").toString()) && registerClient.get("secret").toString().equals(argJsonObject.get("secret").toString())) {
-                                ServerItem.getClientResigterInfo().remove(registerClient);
+                                ServerItem.getClientRegisterInfo().remove(registerClient);
                                 ProcessRegisterFailMessage(argJsonObject, connections);
                                 return false;
                             }
@@ -418,7 +418,7 @@ public class ServerProcessor {
                     }
                 case "\"ACTIVITY_MESSAGE\"":
                     already_login = checkAlreadyLogin(argJsonObject, ServerItem.getConnectingClient());
-                    JsonObject localStorage = apiHelper.searchObjects("username", argJsonObject.get("username").toString(), ServerItem.getClientResigterInfo());
+                    JsonObject localStorage = apiHelper.searchObjects("username", argJsonObject.get("username").toString(), ServerItem.getClientRegisterInfo());
                     //message did not have username field, send INVALID_MESSAGE
                     if (!argJsonObject.has("username") || !argJsonObject.has("secret") || !argJsonObject.has("activity")) {
                         INVALID_MESSAGE.addProperty("command", "INVALID_MESSAGE");

@@ -14,11 +14,11 @@ public class ServerItem extends Thread {
     private static final Logger log = LogManager.getLogger();
     private static ArrayList<ServerConnection> connections = new ArrayList<ServerConnection>();
     private static ArrayList<JsonObject> connectingClient = new ArrayList<JsonObject>();
-    private static ArrayList<JsonObject> ClientResigterInfo = new ArrayList<JsonObject>();
+    private static ArrayList<JsonObject> ClientRegisterInfo = new ArrayList<JsonObject>();
     private static ArrayList<JsonObject> ServerAnnounceInfo = new ArrayList<JsonObject>();
     private static ArrayList<String> connectingServer = new ArrayList<String>();
-    private static ArrayList<JsonObject> activityMessageQue = new ArrayList<JsonObject>();
-    private static ArrayList<ServerConnection> resigterQue = new ArrayList<ServerConnection>();
+    private static ArrayList<JsonObject> activityMessageQueue = new ArrayList<JsonObject>();
+    private static ArrayList<ServerConnection> registerQueue = new ArrayList<ServerConnection>();
     private static boolean term = false;
     private static ServerListener listener;
 
@@ -39,8 +39,8 @@ public class ServerItem extends Thread {
         return connectingClient;
     }
 
-    public static ArrayList<JsonObject> getClientResigterInfo() {
-        return ClientResigterInfo;
+    public static ArrayList<JsonObject> getClientRegisterInfo() {
+        return ClientRegisterInfo;
     }
 
     public static ArrayList<JsonObject> getServerAnnounceInfo() {
@@ -51,12 +51,12 @@ public class ServerItem extends Thread {
         return connectingServer;
     }
 
-    public static ArrayList<JsonObject> getActivityMessageQue() {
-        return activityMessageQue;
+    public static ArrayList<JsonObject> getActivityMessageQueue() {
+        return activityMessageQueue;
     }
 
-    public static ArrayList<ServerConnection> getResigterQue() {
-        return resigterQue;
+    public static ArrayList<ServerConnection> getRegisterQueue() {
+        return registerQueue;
     }
 
     private ServerItem() {
