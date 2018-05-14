@@ -22,4 +22,21 @@ public class ServerAPIHelper {
         }
         return null;
     }
+
+    public static void BroadcastToServer(ArrayList<ServerConnection> argConnections, JsonObject argMessage) {
+        for (ServerConnection _connectionItem : argConnections) {
+            if (_connectionItem.connectionType == ServerConnection.ConnectionType.ConnectedToServer) {
+                SendMessage(_connectionItem, argMessage);
+            }
+        }
+    }
+
+    public static void BroadcastToClient(ArrayList<ServerConnection> argConnections, JsonObject argMessage) {
+        for (ServerConnection _connectionItem : argConnections) {
+            if (_connectionItem.connectionType == ServerConnection.ConnectionType.ConnectedToClient) {
+                SendMessage(_connectionItem, argMessage);
+            }
+        }
+    }
+
 }

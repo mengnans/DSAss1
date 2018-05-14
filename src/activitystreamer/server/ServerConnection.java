@@ -1,47 +1,44 @@
 package activitystreamer.server;
 
-
+import activitystreamer.util.JsonHelper;
 import activitystreamer.util.Settings;
+import com.google.gson.JsonObject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.*;
 import java.net.Socket;
-
+import java.util.ArrayList;
 
 public class ServerConnection extends Thread {
     private static final Logger log = LogManager.getLogger();
     private DataInputStream in;
     private DataOutputStream out;
-    private BufferedReader inreader;
-    private PrintWriter outwriter;
+    private BufferedReader inReader;
+    private PrintWriter outWriter;
     private boolean open = false;
-    private String connectionType = "withClient";
-
     private Socket socket;
-
     private boolean term = false;
+
+    public int clientAmount = 0;
+    public ArrayList<JsonObject> lstReceivedMessage = new ArrayList<JsonObject>();
+    public ArrayList<JsonObject> lstToClientMessage = new ArrayList<JsonObject>();
+    public ArrayList<JsonObject> lstToServerMessage = new ArrayList<JsonObject>();
+
+    public enum ConnectionType {
+        Undefined, ConnectedToServer, ConnectedToClient,
+    }
+
+    public ConnectionType connectionType = ConnectionType.Undefined;
 
     public ServerConnection(Socket socket) throws IOException {
         in = new DataInputStream(socket.getInputStream());
         out = new DataOutputStream(socket.getOutputStream());
-        inreader = new BufferedReader(new InputStreamReader(in));
-        outwriter = new PrintWriter(out, true);
+        inReader = new BufferedReader(new InputStreamReader(in));
+        outWriter = new PrintWriter(out, true);
         this.socket = socket;
         open = true;
         start();
-    }
-
-    public void setConnectionType(String type) {
-        connectionType = type;
-    }
-
-    public String getConnectionType() {
-        return connectionType;
-    }
-
-    public boolean isOpen() {
-        return open;
     }
 
     public Socket getSocket() {
@@ -51,8 +48,9 @@ public class ServerConnection extends Thread {
     public void run() {
         try {
             String data;
-            while (!term && (data = inreader.readLine()) != null) {
-                term = ServerItem.getInstance().ReceivedMessage(this, data);
+            while ((data = inReader.readLine()) != null) {
+                JsonObject _jsonObject = JsonHelper.StringToObject(data);
+                lstReceivedMessage.add(_jsonObject);
             }
             log.debug("connection closed to " + Settings.socketAddress(socket));
             ServerItem.getInstance().connectionClosed(this);
@@ -69,8 +67,8 @@ public class ServerConnection extends Thread {
      */
     public boolean writeMsg(String msg) {
         if (open) {
-            outwriter.println(msg);
-            outwriter.flush();
+            outWriter.println(msg);
+            outWriter.flush();
             return true;
         }
         return false;
@@ -81,7 +79,7 @@ public class ServerConnection extends Thread {
             log.info("closing connection " + Settings.socketAddress(socket));
             try {
                 term = true;
-                inreader.close();
+                inReader.close();
                 out.close();
                 ServerItem.getInstance().connectionClosed(this);
             } catch (IOException e) {

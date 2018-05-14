@@ -117,7 +117,7 @@ public class ServerItem extends Thread {
                 Socket _socket = new Socket(Settings.getRemoteHostname(), Settings.getRemotePort());
                 log.debug("Connected to another server: " + Settings.socketAddress(_socket));
                 ServerConnection _connection = new ServerConnection(_socket);
-                _connection.setConnectionType("withServer");
+                _connection.connectionType = ServerConnection.ConnectionType.ConnectedToServer;
                 connections.add(_connection);
                 connectingServer.add(Settings.socketAddress(_socket));
                 ServerProcessor.ProcessConnectToServer(_connection);

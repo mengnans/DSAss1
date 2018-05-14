@@ -51,18 +51,11 @@ public class ServerProcessor {
         }
         SERVER_ANNOUNCE.addProperty("hostname", Settings.getLocalHostname());
         SERVER_ANNOUNCE.addProperty("port", Settings.getLocalPort());
-        for (ServerConnection tempCon : connections) {
-            if (tempCon.getConnectionType().equals("withServer"))
-                apiHelper.SendMessage(tempCon, SERVER_ANNOUNCE);
-        }
+        ServerAPIHelper.BroadcastToServer(connections, SERVER_ANNOUNCE);
     }
 
     public static void ProcessLockRelatedMessage(ArrayList<ServerConnection> connections, JsonObject lock_request) {
-        for (ServerConnection tempCon : connections) {
-            if (tempCon.getConnectionType().equals("withServer")) {
-                apiHelper.SendMessage(tempCon, lock_request);
-            }
-        }
+        ServerAPIHelper.BroadcastToServer(connections, lock_request);
     }
 
     public static void ProcessRegisterSuccessMessage(JsonObject argJsonObject, ArrayList<ServerConnection> connections) {
@@ -121,7 +114,7 @@ public class ServerProcessor {
     }
 
     public static JsonObject processActivityObject(JsonObject activityObject, ServerConnection connection, JsonObject argJsonObject) {
-        if (connection.getConnectionType().equals("withClient")) {
+        if (connection.connectionType == ServerConnection.ConnectionType.ConnectedToClient) {
             activityObject.addProperty("authenticated_user", argJsonObject.get("username").toString());
         }
         return activityObject;
