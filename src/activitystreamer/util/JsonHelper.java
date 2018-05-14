@@ -10,7 +10,6 @@ public class JsonHelper {
 
     private static JsonParser parser = new JsonParser();
 
-
     /**
      * Convert a JsonObject object to string
      *
@@ -32,4 +31,26 @@ public class JsonHelper {
         JsonObject _obj = (JsonObject) parser.parse(argContent);
         return _obj;
     }
+
+    /**
+     * Get the value of a JSON object as String
+     *
+     * @param argJsonObject Json data object
+     * @param argName       The name of the key
+     * @return
+     */
+    public static String GetValue(JsonObject argJsonObject, String argName) {
+        if (argJsonObject.has(argName) == false) {
+            return null;
+        }
+        String _value = argJsonObject.get(argName).toString();
+        while (_value.startsWith("\"")) {
+            _value = _value.substring(1, _value.length());
+        }
+        while (_value.endsWith("\"")) {
+            _value = _value.substring(0, _value.length() - 1);
+        }
+        return _value;
+    }
+
 }

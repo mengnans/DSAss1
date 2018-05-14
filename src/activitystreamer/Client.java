@@ -10,7 +10,6 @@ public class Client {
     private static final Logger log = LogManager.getLogger();
 
     public static void main(String[] args) {
-        //asfasdf
         ClientCommandHelper.SetReadCommands(args);
         log.info("starting client");
         ClientItem _clientItem = ClientItem.getInstance();
