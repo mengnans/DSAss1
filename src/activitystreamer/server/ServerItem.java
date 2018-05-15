@@ -26,8 +26,6 @@ public class ServerItem extends Thread {
     }
 
     private ServerItem() {
-        // initialize the connections array
-        connections = new ArrayList<ServerConnection>();
         // start a listener
         try {
             listener = new ServerListener();
