@@ -22,8 +22,7 @@ public class ServerConnection extends Thread {
 
     public int clientAmount = 0;
     public ArrayList<JsonObject> lstReceivedMessage = new ArrayList<JsonObject>();
-    public ArrayList<JsonObject> lstToClientMessage = new ArrayList<JsonObject>();
-    public ArrayList<JsonObject> lstToServerMessage = new ArrayList<JsonObject>();
+    public ArrayList<JsonObject> lstToBeSentMessage = new ArrayList<JsonObject>();
 
     public enum ConnectionType {
         Undefined, ConnectedToServer, ConnectedToClient,
@@ -49,8 +48,7 @@ public class ServerConnection extends Thread {
         try {
             String data;
             while ((data = inReader.readLine()) != null) {
-                JsonObject _jsonObject = JsonHelper.StringToObject(data);
-                lstReceivedMessage.add(_jsonObject);
+                ServerItem.getInstance().ReceivedMessage(this, data);
             }
             log.debug("connection closed to " + Settings.socketAddress(socket));
             ServerItem.getInstance().connectionClosed(this);

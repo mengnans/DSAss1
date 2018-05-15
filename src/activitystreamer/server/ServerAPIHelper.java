@@ -23,20 +23,40 @@ public class ServerAPIHelper {
         return null;
     }
 
-    public static void BroadcastToServer(ArrayList<ServerConnection> argConnections, JsonObject argMessage) {
-        for (ServerConnection _connectionItem : argConnections) {
+    public static void BroadcastToServer(JsonObject argMessage) {
+        for (ServerConnection _connectionItem : ServerItem.connections) {
             if (_connectionItem.connectionType == ServerConnection.ConnectionType.ConnectedToServer) {
                 SendMessage(_connectionItem, argMessage);
             }
         }
     }
 
-    public static void BroadcastToClient(ArrayList<ServerConnection> argConnections, JsonObject argMessage) {
-        for (ServerConnection _connectionItem : argConnections) {
+    public static void BroadcastToClient(JsonObject argMessage) {
+        for (ServerConnection _connectionItem : ServerItem.connections) {
             if (_connectionItem.connectionType == ServerConnection.ConnectionType.ConnectedToClient) {
                 SendMessage(_connectionItem, argMessage);
             }
         }
+    }
+
+    public static int GetConnectedClientAmount() {
+        int _amount = 0;
+        for (ServerConnection _connectionItem : ServerItem.connections) {
+            if (_connectionItem.connectionType == ServerConnection.ConnectionType.ConnectedToClient) {
+                _amount++;
+            }
+        }
+        return _amount;
+    }
+
+    public static int GetConnectedServerAmount() {
+        int _amount = 0;
+        for (ServerConnection _connectionItem : ServerItem.connections) {
+            if (_connectionItem.connectionType == ServerConnection.ConnectionType.ConnectedToClient) {
+                _amount++;
+            }
+        }
+        return _amount;
     }
 
 }

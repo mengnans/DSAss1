@@ -12,51 +12,17 @@ import java.util.ArrayList;
 
 public class ServerItem extends Thread {
     private static final Logger log = LogManager.getLogger();
-    private static ArrayList<ServerConnection> connections = new ArrayList<ServerConnection>();
-    private static ArrayList<JsonObject> connectingClient = new ArrayList<JsonObject>();
-    private static ArrayList<JsonObject> ClientRegisterInfo = new ArrayList<JsonObject>();
-    private static ArrayList<JsonObject> ServerAnnounceInfo = new ArrayList<JsonObject>();
-    private static ArrayList<String> connectingServer = new ArrayList<String>();
-    private static ArrayList<JsonObject> activityMessageQueue = new ArrayList<JsonObject>();
-    private static ArrayList<ServerConnection> registerQueue = new ArrayList<ServerConnection>();
     private static boolean term = false;
     private static ServerListener listener;
 
     protected static ServerItem serverItem = null;
+    public static ArrayList<ServerConnection> connections = new ArrayList<ServerConnection>();
 
     public static ServerItem getInstance() {
         if (serverItem == null) {
             serverItem = new ServerItem();
         }
         return serverItem;
-    }
-
-    public static ArrayList<ServerConnection> getConnections() {
-        return connections;
-    }
-
-    public static ArrayList<JsonObject> getConnectingClient() {
-        return connectingClient;
-    }
-
-    public static ArrayList<JsonObject> getClientRegisterInfo() {
-        return ClientRegisterInfo;
-    }
-
-    public static ArrayList<JsonObject> getServerAnnounceInfo() {
-        return ServerAnnounceInfo;
-    }
-
-    public static ArrayList<String> getConnectingServer() {
-        return connectingServer;
-    }
-
-    public static ArrayList<JsonObject> getActivityMessageQueue() {
-        return activityMessageQueue;
-    }
-
-    public static ArrayList<ServerConnection> getRegisterQueue() {
-        return registerQueue;
     }
 
     private ServerItem() {
@@ -78,7 +44,7 @@ public class ServerItem extends Thread {
         ConnectToServer();
         while (!term) {
             // do something with 5 second intervals in between
-            ServerProcessor.ProcessServerAnnounce(connections);
+            ServerProcessor.ProcessServerAnnounce();
             try {
                 Thread.sleep(Settings.getActivityInterval());
             } catch (InterruptedException e) {
@@ -107,7 +73,7 @@ public class ServerItem extends Thread {
     public synchronized boolean ReceivedMessage(ServerConnection argConnection, String argMessageObject) {
         log.debug("Received a new message: " + argMessageObject);
         JsonObject _jsonObject = JsonHelper.StringToObject(argMessageObject);
-        return ServerProcessor.ProcessNetworkMessage(argConnection, _jsonObject, connections);
+        return ServerProcessor.ProcessNetworkMessage(argConnection, _jsonObject);
     }
 
     public synchronized void ConnectToServer() {
@@ -119,7 +85,6 @@ public class ServerItem extends Thread {
                 ServerConnection _connection = new ServerConnection(_socket);
                 _connection.connectionType = ServerConnection.ConnectionType.ConnectedToServer;
                 connections.add(_connection);
-                connectingServer.add(Settings.socketAddress(_socket));
                 ServerProcessor.ProcessConnectToServer(_connection);
             } catch (IOException e) {
                 log.error("failed to make connection to " + Settings.getRemoteHostname() + ":" + Settings.getRemotePort() + " :" + e);

@@ -12,10 +12,10 @@ public class Settings {
     private static SecureRandom random = new SecureRandom();
     private static int localPort = 3780;
     private static String localHostname = "localhost";
-    private static String remoteHostname = "localhost";
-    private static int remotePort = 3781;
+    private static String remoteHostname = "192.168.0.8";
+    private static int remotePort = 5887;
     private static int activityInterval = 5000; // milliseconds
-    private static String secret = null;
+    private static String secret = "Hello";
     private static String username = "anonymous";
     private static String serverID = nextServerID();
 
