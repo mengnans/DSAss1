@@ -10,21 +10,21 @@ import java.security.SecureRandom;
 public class Settings {
     private static final Logger log = LogManager.getLogger();
     private static SecureRandom random = new SecureRandom();
-    private static int localPort = 3780;
+    private static int localPort = 0;
     private static String localHostname = "localhost";
-    private static String remoteHostname = "192.168.0.8";
-    private static int remotePort = 5887;
+    private static String remoteHostname = null;
+    private static int remotePort = 0;
     private static int activityInterval = 5000; // milliseconds
-    private static String secret = "Hello";
+    private static String secret = null;
     private static String username = "anonymous";
     private static String serverID = nextServerID();
 
-    public static void setServerID(String ID) {
-        serverID = serverID;
-    }
-
     public static String getServerID() {
         return serverID;
+    }
+
+    public static void setServerID(String ID) {
+        serverID = serverID;
     }
 
     public static int getLocalPort() {

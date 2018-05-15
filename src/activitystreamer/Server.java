@@ -1,13 +1,9 @@
 package activitystreamer;
 
-import activitystreamer.server.ServerCommandData;
 import activitystreamer.server.ServerCommandHelper;
 import activitystreamer.server.ServerItem;
-import com.google.gson.JsonObject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import javax.lang.model.element.VariableElement;
 
 public class Server {
     private static final Logger log = LogManager.getLogger();

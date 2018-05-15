@@ -31,6 +31,16 @@ public class ServerAPIHelper {
         }
     }
 
+    public static void BroadcastToServer(JsonObject argMessage, ServerConnection argExceptionConnection) {
+        for (ServerConnection _connectionItem : ServerItem.connections) {
+            if (argExceptionConnection == _connectionItem)
+                continue;
+            if (_connectionItem.connectionType == ServerConnection.ConnectionType.ConnectedToServer) {
+                SendMessage(_connectionItem, argMessage);
+            }
+        }
+    }
+
     public static void BroadcastToClient(JsonObject argMessage) {
         for (ServerConnection _connectionItem : ServerItem.connections) {
             if (_connectionItem.connectionType == ServerConnection.ConnectionType.ConnectedToClient) {

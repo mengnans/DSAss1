@@ -1,6 +1,5 @@
 package activitystreamer.server;
 
-import activitystreamer.util.JsonHelper;
 import activitystreamer.util.Settings;
 import com.google.gson.JsonObject;
 import org.apache.logging.log4j.LogManager;
@@ -12,6 +11,11 @@ import java.util.ArrayList;
 
 public class ServerConnection extends Thread {
     private static final Logger log = LogManager.getLogger();
+    public boolean isRegistered = false;
+    public int clientAmount = 0;
+    public ArrayList<JsonObject> lstReceivedMessage = new ArrayList<JsonObject>();
+    public ArrayList<JsonObject> lstToBeSentMessage = new ArrayList<JsonObject>();
+    public ConnectionType connectionType = ConnectionType.Undefined;
     private DataInputStream in;
     private DataOutputStream out;
     private BufferedReader inReader;
@@ -19,16 +23,6 @@ public class ServerConnection extends Thread {
     private boolean open = false;
     private Socket socket;
     private boolean term = false;
-
-    public int clientAmount = 0;
-    public ArrayList<JsonObject> lstReceivedMessage = new ArrayList<JsonObject>();
-    public ArrayList<JsonObject> lstToBeSentMessage = new ArrayList<JsonObject>();
-
-    public enum ConnectionType {
-        Undefined, ConnectedToServer, ConnectedToClient,
-    }
-
-    public ConnectionType connectionType = ConnectionType.Undefined;
 
     public ServerConnection(Socket socket) throws IOException {
         in = new DataInputStream(socket.getInputStream());
@@ -40,15 +34,11 @@ public class ServerConnection extends Thread {
         start();
     }
 
-    public Socket getSocket() {
-        return socket;
-    }
-
     public void run() {
         try {
             String data;
-            while ((data = inReader.readLine()) != null) {
-                ServerItem.getInstance().ReceivedMessage(this, data);
+            while (term == false && (data = inReader.readLine()) != null) {
+                term = ServerItem.getInstance().ReceivedMessage(this, data);
             }
             log.debug("connection closed to " + Settings.socketAddress(socket));
             ServerItem.getInstance().connectionClosed(this);
@@ -85,6 +75,10 @@ public class ServerConnection extends Thread {
                 log.error("received exception closing the connection " + Settings.socketAddress(socket) + ": " + e);
             }
         }
+    }
+
+    public enum ConnectionType {
+        Undefined, ConnectedToServer, ConnectedToClient,
     }
 
 }

@@ -12,18 +12,10 @@ import java.util.ArrayList;
 
 public class ServerItem extends Thread {
     private static final Logger log = LogManager.getLogger();
+    public static ArrayList<ServerConnection> connections = new ArrayList<>();
+    private static ServerItem serverItem = null;
     private static boolean term = false;
     private static ServerListener listener;
-
-    protected static ServerItem serverItem = null;
-    public static ArrayList<ServerConnection> connections = new ArrayList<ServerConnection>();
-
-    public static ServerItem getInstance() {
-        if (serverItem == null) {
-            serverItem = new ServerItem();
-        }
-        return serverItem;
-    }
 
     private ServerItem() {
         // start a listener
@@ -34,6 +26,13 @@ public class ServerItem extends Thread {
             System.exit(-1);
         }
         start();
+    }
+
+    public static ServerItem getInstance() {
+        if (serverItem == null) {
+            serverItem = new ServerItem();
+        }
+        return serverItem;
     }
 
     @Override
@@ -74,7 +73,7 @@ public class ServerItem extends Thread {
         return ServerProcessor.ProcessNetworkMessage(argConnection, _jsonObject);
     }
 
-    public synchronized void ConnectToServer() {
+    private synchronized void ConnectToServer() {
         // make a connection to another server if remote hostname is supplied
         if (Settings.getRemoteHostname() != null) {
             try {
@@ -83,7 +82,8 @@ public class ServerItem extends Thread {
                 ServerConnection _connection = new ServerConnection(_socket);
                 _connection.connectionType = ServerConnection.ConnectionType.ConnectedToServer;
                 connections.add(_connection);
-                ServerProcessor.ProcessConnectToServer(_connection);
+                _connection.isRegistered = true;
+                ServerProcessor_Register.DoAuthenticate(_connection);
             } catch (IOException e) {
                 log.error("failed to make connection to " + Settings.getRemoteHostname() + ":" + Settings.getRemotePort() + " :" + e);
                 System.exit(-1);

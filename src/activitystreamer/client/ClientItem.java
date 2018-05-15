@@ -25,13 +25,6 @@ public class ClientItem extends Thread {
 
     private boolean term = false;
 
-    public static ClientItem getInstance() {
-        if (clientItem == null) {
-            clientItem = new ClientItem();
-        }
-        return clientItem;
-    }
-
     public ClientItem() {
         clientProcessor = new ClientAPIHelper(this);
         ClientProcessor.SetInitial(clientProcessor);
@@ -43,6 +36,13 @@ public class ClientItem extends Thread {
             }
         });
         start();
+    }
+
+    public static ClientItem getInstance() {
+        if (clientItem == null) {
+            clientItem = new ClientItem();
+        }
+        return clientItem;
     }
 
     public boolean SetConnect(String argHost, int argPort) {
