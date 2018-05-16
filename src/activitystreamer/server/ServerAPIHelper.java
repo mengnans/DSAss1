@@ -13,16 +13,6 @@ public class ServerAPIHelper {
       argConnection.writeMsg(_messageContent);
    }
 
-   //search Object in JsonObject list based on the given key
-   public static JsonObject searchObjects(String key, String value, ArrayList<JsonObject> jsonObjects) {
-      for (JsonObject jsonObject : jsonObjects) {
-         if (JsonHelper.GetValue(jsonObject, key).equals(value)) {
-            return jsonObject;
-         }
-      }
-      return null;
-   }
-
    public static void BroadcastToServer(JsonObject argMessage) {
       for (ServerConnection _connectionItem : ServerItem.connections) {
          if (_connectionItem.connectionType == ServerConnection.ConnectionType.ConnectedToServer) {

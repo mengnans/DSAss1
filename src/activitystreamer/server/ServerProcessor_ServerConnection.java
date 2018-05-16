@@ -69,8 +69,8 @@ public class ServerProcessor_ServerConnection {
             return false;
          }
          case "USER_LIST_UPDATE": {
-            String[] _userName = JsonHelper.GetValue(argJsonObject, "connectedClientUserName").split("\r");
-            String[] _userSecret = JsonHelper.GetValue(argJsonObject, "connectedClientSecret").split("\r");
+            String[] _userName = JsonHelper.GetValue(argJsonObject, "connectedClientUserName").split("\n");
+            String[] _userSecret = JsonHelper.GetValue(argJsonObject, "connectedClientSecret").split("\n");
             if (_userName.length != _userSecret.length) {
                JsonObject _message = ServerCommandData_ServerConnection.AUTHENTICATION_FAIL("The length of user name and user secret is not the same");
                ServerAPIHelper.SendMessage(argConnection, _message);

@@ -13,4 +13,12 @@ public class ClientCommandData {
       return _message;
    }
 
+   public static JsonObject LOGIN() {
+      JsonObject _message = new JsonObject();
+      _message.addProperty("command", "LOGIN");
+      _message.addProperty("username", Settings.getUsername());
+      _message.addProperty("secret", Settings.getSecret());
+      return _message;
+   }
+
 }

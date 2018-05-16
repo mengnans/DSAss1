@@ -38,7 +38,6 @@ public class ClientAPIHelper {
     * @param argMessage The String message object
     */
    public static void SetDisplayMessage(String argMessage) {
-
       ClientItem.clientItem.SetDisplay(argMessage);
    }
 

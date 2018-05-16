@@ -9,13 +9,22 @@ public class ClientProcessor {
    /**
     * This function will be called when the client wants to connect a server
     */
-   public static void ProcessConnection() {
-      String serverAddress = Settings.getRemoteHostname();
-      int serverPort = Settings.getRemotePort();
+   public static boolean ProcessConnection() {
+      boolean _isConnected = ClientAPIHelper.SetConnection(Settings.getRemoteHostname(), Settings.getRemotePort());
+      if (_isConnected) {
+         ClientAPIHelper.SetDisplayMessage("The client successfully connects to the server");
+      } else {
+         ClientAPIHelper.SetDisplayMessage("The client fails to connect the server");
+      }
+      return _isConnected;
+   }
 
-      boolean isConnection = ClientAPIHelper.SetConnection(serverAddress, serverPort);
-
-      if (isConnection) {
+   /**
+    * This function will be called when the client wants to connect a server
+    */
+   public static void ProcessConnectionAndRegister() {
+      boolean _isConnected = ClientAPIHelper.SetConnection(Settings.getRemoteHostname(), Settings.getRemotePort());
+      if (_isConnected) {
          ClientAPIHelper.SetDisplayMessage("The client successfully connects to the server");
          if (Settings.getUsername() != null) {
             JsonObject _message = ClientCommandData.REGISTER();
@@ -50,36 +59,23 @@ public class ClientProcessor {
          case "ACTIVITY_BROADCAST":
             ClientAPIHelper.SetDisplayMessage(argJsonObject);
             break;
-         case "REDIRECT":
-            ClientAPIHelper.SetDisplayMessage("Redirected to host:" + argJsonObject.get("hostname") + " prot:" + argJsonObject.get("port"));
+         case "REDIRECT": {
+            ClientAPIHelper.SetDisplayMessage("Redirected to host:" + argJsonObject.get("hostname") + " port:" + argJsonObject.get("port"));
             ClientAPIHelper.CloseConnection();
-            String hostName = argJsonObject.get("hostname").toString();
-            int port = Integer.parseInt(argJsonObject.get("port").toString());
-
-            JsonObject ReDirectJsonObject = new JsonObject();
-            ReDirectJsonObject.addProperty("command", "REDIRECT");
-            ReDirectJsonObject.addProperty("username", Settings.getUsername());
-            ReDirectJsonObject.addProperty("secret", Settings.getSecret());
-            ClientAPIHelper.SendMessage(ReDirectJsonObject);
-
-            boolean isConnection = ClientAPIHelper.SetConnection(hostName, port);
-            if (isConnection) {
-               ClientAPIHelper.SetDisplayMessage("The client successfully connects to the server: " + hostName);
-            } else {
-               ClientAPIHelper.SetDisplayMessage("The client fails to connect the server");
-            }
+            Settings.setRemoteHostname(JsonHelper.GetValue(argJsonObject, "hostname"));
+            Settings.setRemotePort(Integer.parseInt(argJsonObject.get("port").toString()));
+            ClientAPIHelper.SetConnection(Settings.getRemoteHostname(), Settings.getRemotePort());
             break;
+         }
          case "REGISTER_FAILED":
             ClientAPIHelper.SetDisplayMessage("Failed to register because " + argJsonObject.get("info"));
             break;
-         case "REGISTER_SUCCESS":
+         case "REGISTER_SUCCESS": {
             ClientAPIHelper.SetDisplayMessage(argJsonObject.get("info").toString());
-            JsonObject logInJsonObject = new JsonObject();
-            logInJsonObject.addProperty("command", "LOGIN");
-            logInJsonObject.addProperty("username", Settings.getUsername());
-            logInJsonObject.addProperty("secret", Settings.getSecret());
-            ClientAPIHelper.SendMessage(logInJsonObject);
+            JsonObject _message = ClientCommandData.LOGIN();
+            ClientAPIHelper.SendMessage(_message);
             break;
+         }
          default:
       }
    }
@@ -93,9 +89,13 @@ public class ClientProcessor {
       String _command = JsonHelper.GetValue(argJsonObject, "command");
       switch (_command) {
          case "REGISTER":
+            Settings.setUsername(JsonHelper.GetValue(argJsonObject, "username"));
+            Settings.setSecret(JsonHelper.GetValue(argJsonObject, "secret"));
             ClientAPIHelper.SendMessage(argJsonObject);
             break;
          case "LOGIN":
+            Settings.setUsername(JsonHelper.GetValue(argJsonObject, "username"));
+            Settings.setSecret(JsonHelper.GetValue(argJsonObject, "secret"));
             ClientAPIHelper.SendMessage(argJsonObject);
             break;
          case "LOGOUT":

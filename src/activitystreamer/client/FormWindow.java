@@ -65,7 +65,9 @@ public class FormWindow extends JFrame implements ActionListener {
    }
 
    public void setOutputText(final String argMessage) {
-      outputText.setText(argMessage);
+      String _data = outputText.getText();
+      _data = argMessage + "\n" + _data;
+      outputText.setText(_data);
       outputText.revalidate();
       outputText.repaint();
    }
