@@ -13,84 +13,84 @@ import java.net.UnknownHostException;
  * Utility class used to handle start up commands
  */
 public class ServerCommandHelper {
-    private static final Logger log = LogManager.getLogger();
+   private static final Logger log = LogManager.getLogger();
 
-    private static void help(Options options) {
-        String header = "An ActivityStream Server for Unimelb COMP90015\n\n";
-        String footer = "\ncontact aharwood@unimelb.edu.au for issues.";
-        HelpFormatter formatter = new HelpFormatter();
-        formatter.printHelp("ActivityStreamer.Server", header, options, footer, true);
-        System.exit(-1);
-    }
+   private static void help(Options options) {
+      String header = "An ActivityStream Server for Unimelb COMP90015\n\n";
+      String footer = "\ncontact aharwood@unimelb.edu.au for issues.";
+      HelpFormatter formatter = new HelpFormatter();
+      formatter.printHelp("ActivityStreamer.Server", header, options, footer, true);
+      System.exit(-1);
+   }
 
-    public static void SetReadCommands(String[] args) {
-        log.info("reading command line options");
+   public static void SetReadCommands(String[] args) {
+      log.info("reading command line options");
 
-        Options options = new Options();
-        options.addOption("lp", true, "local port number");
-        options.addOption("rp", true, "remote port number");
-        options.addOption("rh", true, "remote hostname");
-        options.addOption("lh", true, "local hostname");
-        options.addOption("a", true, "activity interval in milliseconds");
-        options.addOption("s", true, "secret for the server to use");
+      Options options = new Options();
+      options.addOption("lp", true, "local port number");
+      options.addOption("rp", true, "remote port number");
+      options.addOption("rh", true, "remote hostname");
+      options.addOption("lh", true, "local hostname");
+      options.addOption("a", true, "activity interval in milliseconds");
+      options.addOption("s", true, "secret for the server to use");
 
-        // build the parser
-        CommandLineParser parser = new DefaultParser();
+      // build the parser
+      CommandLineParser parser = new DefaultParser();
 
-        CommandLine cmd = null;
-        try {
-            cmd = parser.parse(options, args);
-        } catch (ParseException e1) {
+      CommandLine cmd = null;
+      try {
+         cmd = parser.parse(options, args);
+      } catch (ParseException e1) {
+         help(options);
+      }
+
+
+      if (cmd.hasOption("lp")) {
+         try {
+            int port = Integer.parseInt(cmd.getOptionValue("lp"));
+            Settings.setLocalPort(port);
+         } catch (NumberFormatException e) {
+            log.info("-lp requires a port number, parsed: " + cmd.getOptionValue("lp"));
             help(options);
-        }
+         }
+      }
 
+      if (cmd.hasOption("rh")) {
+         Settings.setRemoteHostname(cmd.getOptionValue("rh"));
+      }
 
-        if (cmd.hasOption("lp")) {
-            try {
-                int port = Integer.parseInt(cmd.getOptionValue("lp"));
-                Settings.setLocalPort(port);
-            } catch (NumberFormatException e) {
-                log.info("-lp requires a port number, parsed: " + cmd.getOptionValue("lp"));
-                help(options);
-            }
-        }
+      if (cmd.hasOption("rp")) {
+         try {
+            int port = Integer.parseInt(cmd.getOptionValue("rp"));
+            Settings.setRemotePort(port);
+         } catch (NumberFormatException e) {
+            log.error("-rp requires a port number, parsed: " + cmd.getOptionValue("rp"));
+            help(options);
+         }
+      }
 
-        if (cmd.hasOption("rh")) {
-            Settings.setRemoteHostname(cmd.getOptionValue("rh"));
-        }
+      if (cmd.hasOption("a")) {
+         try {
+            int a = Integer.parseInt(cmd.getOptionValue("a"));
+            Settings.setActivityInterval(a);
+         } catch (NumberFormatException e) {
+            log.error("-a requires a number in milliseconds, parsed: " + cmd.getOptionValue("a"));
+            help(options);
+         }
+      }
 
-        if (cmd.hasOption("rp")) {
-            try {
-                int port = Integer.parseInt(cmd.getOptionValue("rp"));
-                Settings.setRemotePort(port);
-            } catch (NumberFormatException e) {
-                log.error("-rp requires a port number, parsed: " + cmd.getOptionValue("rp"));
-                help(options);
-            }
-        }
+      try {
+         Settings.setLocalHostname(InetAddress.getLocalHost().getHostAddress());
+      } catch (UnknownHostException e) {
+         log.warn("failed to get localhost IP address");
+      }
 
-        if (cmd.hasOption("a")) {
-            try {
-                int a = Integer.parseInt(cmd.getOptionValue("a"));
-                Settings.setActivityInterval(a);
-            } catch (NumberFormatException e) {
-                log.error("-a requires a number in milliseconds, parsed: " + cmd.getOptionValue("a"));
-                help(options);
-            }
-        }
+      if (cmd.hasOption("lh")) {
+         Settings.setLocalHostname(cmd.getOptionValue("lh"));
+      }
 
-        try {
-            Settings.setLocalHostname(InetAddress.getLocalHost().getHostAddress());
-        } catch (UnknownHostException e) {
-            log.warn("failed to get localhost IP address");
-        }
-
-        if (cmd.hasOption("lh")) {
-            Settings.setLocalHostname(cmd.getOptionValue("lh"));
-        }
-
-        if (cmd.hasOption("s")) {
-            Settings.setSecret(cmd.getOptionValue("s"));
-        }
-    }
+      if (cmd.hasOption("s")) {
+         Settings.setSecret(cmd.getOptionValue("s"));
+      }
+   }
 }
