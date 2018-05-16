@@ -87,4 +87,27 @@ public class ServerAPIHelper {
       return false;
    }
 
+   public static boolean TestIsUserInfoExisted(String argUserName, String argUserSecret) {
+      for (int _proUserIndex = 0; _proUserIndex < ServerItem.lstUserInfo.size(); _proUserIndex++) {
+         if (argUserName.equals(ServerItem.lstUserInfo.get(_proUserIndex)[0])) {
+            if (argUserSecret.equals(ServerItem.lstUserInfo.get(_proUserIndex)[1])) {
+               return true;
+            }
+            return false;
+         }
+      }
+      return false;
+   }
+
+   public static boolean UpdateUserInfoList(String[] argUserName, String[] argUserSecret) {
+      boolean _isChanged = false;
+      for (int _newUserIndex = 0; _newUserIndex < argUserName.length; _newUserIndex++) {
+         if (ServerAPIHelper.TestIsUserNameExisted(argUserName[_newUserIndex])) {
+            ServerItem.lstUserInfo.add(new String[]{argUserName[_newUserIndex], argUserSecret[_newUserIndex]});
+            _isChanged = true;
+         }
+      }
+      return _isChanged;
+   }
+
 }

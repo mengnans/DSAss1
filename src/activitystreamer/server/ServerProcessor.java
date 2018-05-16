@@ -25,6 +25,7 @@ public class ServerProcessor {
          case "USER_LIST_UPDATE":
             return ServerProcessor_ServerConnection.ProcessNetworkMessage(argConnection, argJsonObject);
          case "REGISTER":
+         case "LOGIN":
             return ServerProcessor_ClientRegister.ProcessNetworkMessage(argConnection, argJsonObject);
       }
       return false;
