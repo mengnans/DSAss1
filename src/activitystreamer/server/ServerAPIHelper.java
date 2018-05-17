@@ -58,6 +58,16 @@ public class ServerAPIHelper {
       return _lstConnection;
    }
 
+   public static ArrayList<ServerConnection> GetServerConnection() {
+      ArrayList<ServerConnection> _lstConnection = new ArrayList<>();
+      for (ServerConnection _connectionItem : ServerItem.connections) {
+         if (_connectionItem.connectionType == ServerConnection.ConnectionType.ConnectedToServer) {
+            _lstConnection.add(_connectionItem);
+         }
+      }
+      return _lstConnection;
+   }
+
    public static int GetConnectedClientAmount() {
       int _amount = 0;
       for (ServerConnection _connectionItem : ServerItem.connections) {
@@ -102,7 +112,7 @@ public class ServerAPIHelper {
    public static boolean UpdateUserInfoList(String[] argUserName, String[] argUserSecret) {
       boolean _isChanged = false;
       for (int _newUserIndex = 0; _newUserIndex < argUserName.length; _newUserIndex++) {
-         if (ServerAPIHelper.TestIsUserNameExisted(argUserName[_newUserIndex])==false) {
+         if (ServerAPIHelper.TestIsUserNameExisted(argUserName[_newUserIndex]) == false) {
             ServerItem.lstUserInfo.add(new String[]{argUserName[_newUserIndex], argUserSecret[_newUserIndex]});
             _isChanged = true;
          }

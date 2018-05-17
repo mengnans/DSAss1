@@ -3,6 +3,8 @@ package activitystreamer.server;
 import activitystreamer.util.JsonHelper;
 import com.google.gson.JsonObject;
 
+import java.util.ArrayList;
+
 public class ServerProcessor_ClientRegister {
 
    /**
@@ -22,12 +24,12 @@ public class ServerProcessor_ClientRegister {
                ServerAPIHelper.SendMessage(argConnection, _message);
                return true;
             }
-            if (_userSecret.contains(",")) {
-               JsonObject _message = ServerCommandData.InvalidMessage("Should not contain dot in the secret");
+            if (_userName.contains(",") || _userSecret.contains(",")) {
+               JsonObject _message = ServerCommandData.InvalidMessage("Should not contain dot in the user name or the user secret");
                ServerAPIHelper.SendMessage(argConnection, _message);
                return true;
             }
-            if (ServerAPIHelper.TestIsUserNameExisted(_userName)) {
+            if (ServerAPIHelper.TestIsUserNameExisted(_userName) == true && ServerAPIHelper.TestIsUserInfoExisted(_userName, _userSecret) == false) {
                JsonObject _message = ServerCommandData_ClientRegister.REGISTER_FAILED(_userName);
                ServerAPIHelper.SendMessage(argConnection, _message);
                return true;
@@ -41,26 +43,51 @@ public class ServerProcessor_ClientRegister {
             ServerAPIHelper.BroadcastToServer(_message);
             return false;
          }
-         case "LOGIN": {
-            String _userName = JsonHelper.GetValue(argJsonObject, "username");
-            String _userSecret = JsonHelper.GetValue(argJsonObject, "secret");
-            if (argConnection.isRegistered || argConnection.connectionType != ServerConnection.ConnectionType.Undefined || _userName == null || _userSecret == null) {
-               JsonObject _message = ServerCommandData.InvalidMessage("Should contain userName and userSecret");
-               ServerAPIHelper.SendMessage(argConnection, _message);
-               return true;
-            }
-            boolean _isExisted = ServerAPIHelper.TestIsUserInfoExisted(_userName, _userSecret);
-            if (_isExisted == true) {
-               JsonObject _message = ServerCommandData_ClientRegister.LOGIN_SUCCESS(_userName);
-               ServerAPIHelper.SendMessage(argConnection, _message);
-               argConnection.connectionType = ServerConnection.ConnectionType.ConnectedToClient;
-               return false;
-            } else {
-               JsonObject _message = ServerCommandData_ClientRegister.LOGIN_FAILED(_userName);
-               ServerAPIHelper.SendMessage(argConnection, _message);
-               return false;
-            }
+         case "LOGIN":
+            return DealWith_LOGIN(argConnection, argJsonObject);
+      }
+      return false;
+   }
+
+   private static boolean DealWith_LOGIN(ServerConnection argConnection, JsonObject argJsonObject) {
+      String _userName = JsonHelper.GetValue(argJsonObject, "username");
+      String _userSecret = JsonHelper.GetValue(argJsonObject, "secret");
+      if (argConnection.isRegistered || argConnection.connectionType != ServerConnection.ConnectionType.Undefined || _userName == null || _userSecret == null) {
+         JsonObject _message = ServerCommandData.InvalidMessage("Should contain userName and userSecret");
+         ServerAPIHelper.SendMessage(argConnection, _message);
+         return true;
+      }
+      boolean _isExisted = ServerAPIHelper.TestIsUserInfoExisted(_userName, _userSecret);
+      if (_isExisted == false) {
+         JsonObject _message = ServerCommandData_ClientRegister.LOGIN_FAILED(_userName);
+         ServerAPIHelper.SendMessage(argConnection, _message);
+         return false;
+      }
+      boolean _isRedirected = IsRedirectNeeded(argConnection);
+      if (_isRedirected == true) {
+         return true;
+      } else {
+         JsonObject _message = ServerCommandData_ClientRegister.LOGIN_SUCCESS(_userName);
+         ServerAPIHelper.SendMessage(argConnection, _message);
+         argConnection.connectionType = ServerConnection.ConnectionType.ConnectedToClient;
+         return false;
+      }
+   }
+
+   private static boolean IsRedirectNeeded(ServerConnection argConnectionItem) {
+      ServerConnection _connection = null;
+      int _clientAmount = ServerAPIHelper.GetConnectedClientAmount();
+      ArrayList<ServerConnection> _blkConnection = ServerAPIHelper.GetServerConnection();
+      for (ServerConnection _connectionItem : _blkConnection) {
+         if (_clientAmount > _connectionItem.clientAmount) {
+            _clientAmount = _connectionItem.clientAmount;
+            _connection = _connectionItem;
          }
+      }
+      if (_connection != null) {
+         JsonObject _message = ServerCommandData_ClientRegister.REDIRECT(_connection);
+         ServerAPIHelper.SendMessage(argConnectionItem, _message);
+         return true;
       }
       return false;
    }

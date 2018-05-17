@@ -47,6 +47,7 @@ public class ClientProcessor {
             ClientAPIHelper.SetDisplayMessage(argJsonObject.get("info").toString());
             break;
          case "AUTHENTICATION_FAIL":
+            ClientAPIHelper.SetDisplayMessage(argJsonObject.get("info").toString());
             break;
          case "LOGIN_SUCCESS":
             ClientAPIHelper.SetDisplayMessage(argJsonObject.get("info").toString());
@@ -61,7 +62,10 @@ public class ClientProcessor {
             ClientAPIHelper.SetDisplayMessage("Redirected to host:" + argJsonObject.get("hostname") + " port:" + argJsonObject.get("port"));
             Settings.setRemoteHostname(JsonHelper.GetValue(argJsonObject, "hostname"));
             Settings.setRemotePort(Integer.parseInt(argJsonObject.get("port").toString()));
+
             ClientAPIHelper.SetConnection(Settings.getRemoteHostname(), Settings.getRemotePort());
+            JsonObject _message = ClientCommandData.LOGIN();
+            ClientAPIHelper.SendMessage(_message);
             break;
          }
          case "REGISTER_FAILED":

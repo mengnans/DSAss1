@@ -34,4 +34,14 @@ public class JsonHelper {
       return _value;
    }
 
+   public static int GetValueAsInt(JsonObject argJsonObject, String argName) {
+      String _value = JsonHelper.GetValue(argJsonObject, argName);
+      if (_value == null) return 0;
+      try {
+         return Integer.parseInt(_value);
+      } catch (Exception e) {
+         return 0;
+      }
+   }
+
 }

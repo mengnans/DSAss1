@@ -13,17 +13,14 @@ import java.net.Socket;
 
 public class ClientItem extends Thread {
    private static final Logger log = LogManager.getLogger();
+   public static ClientItem clientItem;
    private FormWindow formWindowItem;
    private Socket socket;
-
    private DataInputStream in;
    private DataOutputStream out;
    private BufferedReader inreader;
    private PrintWriter outwriter;
-
    private boolean term = false;
-
-   public static ClientItem clientItem;
 
    public ClientItem() {
       formWindowItem = new FormWindow();
@@ -71,8 +68,7 @@ public class ClientItem extends Thread {
 
    public void run() {
       try {
-//         ClientProcessor.ProcessConnectionAndRegister();
-         ClientProcessor.ProcessConnection();
+         ClientProcessor.ProcessConnectionAndRegister();
          String data;
          while (!term && (data = inreader.readLine()) != null) {
             JsonObject _json = JsonHelper.StringToObject(data);

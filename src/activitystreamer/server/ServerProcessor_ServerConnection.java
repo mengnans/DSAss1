@@ -87,6 +87,11 @@ public class ServerProcessor_ServerConnection {
             }
             return false;
          }
+         case "SERVER_ANNOUNCE": {
+            argConnection.clientAmount = JsonHelper.GetValueAsInt(argJsonObject, "load");
+            argConnection.portForClient = JsonHelper.GetValueAsInt(argJsonObject, "port");
+            return false;
+         }
       }
       return false;
    }

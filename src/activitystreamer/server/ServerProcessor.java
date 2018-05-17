@@ -23,6 +23,7 @@ public class ServerProcessor {
          case "AUTHENTICATE":
          case "LOCK_SERVER_JOIN":
          case "USER_LIST_UPDATE":
+         case "SERVER_ANNOUNCE":
             return ServerProcessor_ServerConnection.ProcessNetworkMessage(argConnection, argJsonObject);
          case "REGISTER":
          case "LOGIN":

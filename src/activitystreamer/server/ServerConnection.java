@@ -11,11 +11,6 @@ import java.util.ArrayList;
 
 public class ServerConnection extends Thread {
    private static final Logger log = LogManager.getLogger();
-   public boolean isRegistered = false;
-   public int clientAmount = 0;
-   public ArrayList<JsonObject> lstReceivedMessage = new ArrayList<>();
-   public ArrayList<JsonObject> lstToBeSentMessage = new ArrayList<>();
-   public ConnectionType connectionType = ConnectionType.Undefined;
    private DataInputStream in;
    private DataOutputStream out;
    private BufferedReader inReader;
@@ -23,6 +18,13 @@ public class ServerConnection extends Thread {
    private boolean open;
    private Socket socket;
    private boolean term = false;
+
+   public boolean isRegistered = false;
+   public int clientAmount = 0;
+   public int portForClient = -1;
+   public ArrayList<JsonObject> lstReceivedMessage = new ArrayList<>();
+   public ArrayList<JsonObject> lstToBeSentMessage = new ArrayList<>();
+   public ConnectionType connectionType = ConnectionType.Undefined;
 
    public ServerConnection(Socket socket) throws IOException {
       in = new DataInputStream(socket.getInputStream());
@@ -32,6 +34,10 @@ public class ServerConnection extends Thread {
       this.socket = socket;
       open = true;
       start();
+   }
+
+   public Socket getSocket() {
+      return socket;
    }
 
    public void run() {
