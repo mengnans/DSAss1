@@ -22,6 +22,11 @@ public class ServerProcessor_ClientRegister {
                ServerAPIHelper.SendMessage(argConnection, _message);
                return true;
             }
+            if (_userSecret.contains(",")) {
+               JsonObject _message = ServerCommandData.InvalidMessage("Should not contain dot in the secret");
+               ServerAPIHelper.SendMessage(argConnection, _message);
+               return true;
+            }
             if (ServerAPIHelper.TestIsUserNameExisted(_userName)) {
                JsonObject _message = ServerCommandData_ClientRegister.REGISTER_FAILED(_userName);
                ServerAPIHelper.SendMessage(argConnection, _message);
