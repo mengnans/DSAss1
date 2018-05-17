@@ -11,6 +11,9 @@ public class Server {
    public static void main(String[] args) {
       log.info("reading command line options");
       ServerCommandHelper.SetReadCommands(args);
+      //      String _data = "colin\n";
+      //      String[] _blkData = _data.split("\n");
+      //int a=0;
 
       log.info("starting server");
       final ServerItem _serverItem = ServerItem.getInstance();

@@ -7,21 +7,21 @@ public class ServerCommandData_ClientRegister {
    public static JsonObject REGISTER_FAILED(String argUserName) {
       JsonObject _message = new JsonObject();
       _message.addProperty("command", "REGISTER_FAILED");
-      _message.addProperty("info", argUserName + "is already registered with the system");
+      _message.addProperty("info", argUserName + " is already registered with the system");
       return _message;
    }
 
    public static JsonObject REGISTER_SUCCESS(String argUserName) {
       JsonObject _message = new JsonObject();
       _message.addProperty("command", "REGISTER_SUCCESS");
-      _message.addProperty("info", "register success for" + argUserName);
+      _message.addProperty("info", "register success for " + argUserName);
       return _message;
    }
 
    public static JsonObject LOGIN_SUCCESS(String argUserName) {
       JsonObject _message = new JsonObject();
       _message.addProperty("command", "LOGIN_SUCCESS");
-      _message.addProperty("info", "logged in as user" + argUserName);
+      _message.addProperty("info", "logged in as user " + argUserName);
       return _message;
    }
 

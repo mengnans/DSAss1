@@ -37,8 +37,8 @@ public class ServerCommandData_ServerConnection {
       String _userName = "";
       String _userSecret = "";
       for (String[] _info : ServerItem.lstUserInfo) {
-         _userName += _info[0] + "\n";
-         _userSecret += _info[1] + "\n";
+         _userName += _info[0] + ",";
+         _userSecret += _info[1] + ",";
       }
       JsonObject _message = new JsonObject();
       _message.addProperty("command", "USER_LIST_UPDATE");

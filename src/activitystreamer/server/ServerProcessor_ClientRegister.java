@@ -33,7 +33,7 @@ public class ServerProcessor_ClientRegister {
             // Send info to all other server to update the userList
             ServerAPIHelper.UpdateUserInfoList(new String[]{_userName}, new String[]{_userSecret});
             _message = ServerCommandData_ServerConnection.USER_LIST_UPDATE();
-            ServerAPIHelper.BroadcastToServer(_message, argConnection);
+            ServerAPIHelper.BroadcastToServer(_message);
             return false;
          }
          case "LOGIN": {
@@ -48,11 +48,12 @@ public class ServerProcessor_ClientRegister {
             if (_isExisted == true) {
                JsonObject _message = ServerCommandData_ClientRegister.LOGIN_SUCCESS(_userName);
                ServerAPIHelper.SendMessage(argConnection, _message);
+               argConnection.connectionType = ServerConnection.ConnectionType.ConnectedToClient;
                return false;
             } else {
                JsonObject _message = ServerCommandData_ClientRegister.LOGIN_FAILED(_userName);
                ServerAPIHelper.SendMessage(argConnection, _message);
-               return true;
+               return false;
             }
          }
       }

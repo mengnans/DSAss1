@@ -42,6 +42,7 @@ public class ServerProcessor_ServerConnection {
                return true;
             }
             argConnection.isRegistered = true;
+            argConnection.connectionType = ServerConnection.ConnectionType.ConnectedToServer;
             return false;
          case "LOCK_SERVER_JOIN": {
             boolean _isChanged = false;
@@ -69,8 +70,11 @@ public class ServerProcessor_ServerConnection {
             return false;
          }
          case "USER_LIST_UPDATE": {
-            String[] _userName = JsonHelper.GetValue(argJsonObject, "connectedClientUserName").split("\n");
-            String[] _userSecret = JsonHelper.GetValue(argJsonObject, "connectedClientSecret").split("\n");
+            String _nameData = JsonHelper.GetValue(argJsonObject, "connectedClientUserName");
+            String _secretData = JsonHelper.GetValue(argJsonObject, "connectedClientSecret");
+            String[] _userName = _nameData.split(",");
+            String[] _userSecret = _secretData.split(",");
+
             if (_userName.length != _userSecret.length) {
                JsonObject _message = ServerCommandData_ServerConnection.AUTHENTICATION_FAIL("The length of user name and user secret is not the same");
                ServerAPIHelper.SendMessage(argConnection, _message);
@@ -79,7 +83,7 @@ public class ServerProcessor_ServerConnection {
             boolean _isChanged = ServerAPIHelper.UpdateUserInfoList(_userName, _userSecret);
             if (_isChanged) {
                JsonObject _message = ServerCommandData_ServerConnection.USER_LIST_UPDATE();
-               ServerAPIHelper.BroadcastToServer(_message, argConnection);
+               ServerAPIHelper.BroadcastToServer(_message);
             }
             return false;
          }

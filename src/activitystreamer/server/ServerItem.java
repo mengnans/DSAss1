@@ -42,7 +42,7 @@ public class ServerItem extends Thread {
       ConnectToServer();
       while (!term) {
          // do something with 5 second intervals in between
-         ServerProcessor.ProcessServerAnnounce();
+//         ServerProcessor.ProcessServerAnnounce();
          try {
             Thread.sleep(Settings.getActivityInterval());
          } catch (InterruptedException e) {

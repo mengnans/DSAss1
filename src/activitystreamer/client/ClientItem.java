@@ -71,7 +71,8 @@ public class ClientItem extends Thread {
 
    public void run() {
       try {
-         ClientProcessor.ProcessConnectionAndRegister();
+//         ClientProcessor.ProcessConnectionAndRegister();
+         ClientProcessor.ProcessConnection();
          String data;
          while (!term && (data = inreader.readLine()) != null) {
             JsonObject _json = JsonHelper.StringToObject(data);

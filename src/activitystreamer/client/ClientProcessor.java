@@ -47,21 +47,18 @@ public class ClientProcessor {
             ClientAPIHelper.SetDisplayMessage(argJsonObject.get("info").toString());
             break;
          case "AUTHENTICATION_FAIL":
-            ClientAPIHelper.CloseConnection();
             break;
          case "LOGIN_SUCCESS":
             ClientAPIHelper.SetDisplayMessage(argJsonObject.get("info").toString());
             break;
          case "LOGIN_FAILED":
             ClientAPIHelper.SetDisplayMessage("Failed to log in: " + argJsonObject.get("info"));
-            ClientAPIHelper.CloseConnection();
             break;
          case "ACTIVITY_BROADCAST":
             ClientAPIHelper.SetDisplayMessage(argJsonObject);
             break;
          case "REDIRECT": {
             ClientAPIHelper.SetDisplayMessage("Redirected to host:" + argJsonObject.get("hostname") + " port:" + argJsonObject.get("port"));
-            ClientAPIHelper.CloseConnection();
             Settings.setRemoteHostname(JsonHelper.GetValue(argJsonObject, "hostname"));
             Settings.setRemotePort(Integer.parseInt(argJsonObject.get("port").toString()));
             ClientAPIHelper.SetConnection(Settings.getRemoteHostname(), Settings.getRemotePort());
