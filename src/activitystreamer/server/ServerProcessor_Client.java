@@ -5,7 +5,7 @@ import com.google.gson.JsonObject;
 
 import java.util.ArrayList;
 
-public class ServerProcessor_ClientRegister {
+public class ServerProcessor_Client {
 
    /**
     * This function will be called when a message is received through the network
@@ -30,21 +30,23 @@ public class ServerProcessor_ClientRegister {
                return true;
             }
             if (ServerAPIHelper.TestIsUserNameExisted(_userName) == true && ServerAPIHelper.TestIsUserInfoExisted(_userName, _userSecret) == false) {
-               JsonObject _message = ServerCommandData_ClientRegister.REGISTER_FAILED(_userName);
+               JsonObject _message = ServerCommandData_Client.REGISTER_FAILED(_userName);
                ServerAPIHelper.SendMessage(argConnection, _message);
                return true;
             }
             // Send info to the client
-            JsonObject _message = ServerCommandData_ClientRegister.REGISTER_SUCCESS(_userName);
+            JsonObject _message = ServerCommandData_Client.REGISTER_SUCCESS(_userName);
             ServerAPIHelper.SendMessage(argConnection, _message);
             // Send info to all other server to update the userList
             ServerAPIHelper.UpdateUserInfoList(new String[]{_userName}, new String[]{_userSecret});
-            _message = ServerCommandData_ServerConnection.USER_LIST_UPDATE();
+            _message = ServerCommandData_Server.USER_LIST_UPDATE();
             ServerAPIHelper.BroadcastToServer(_message);
             return false;
          }
          case "LOGIN":
             return DealWith_LOGIN(argConnection, argJsonObject);
+         case "ACTIVITY_MESSAGE":
+            return DealWith_ACTIVITY_MESSAGE(argConnection, argJsonObject);
       }
       return false;
    }
@@ -59,7 +61,7 @@ public class ServerProcessor_ClientRegister {
       }
       boolean _isExisted = ServerAPIHelper.TestIsUserInfoExisted(_userName, _userSecret);
       if (_isExisted == false) {
-         JsonObject _message = ServerCommandData_ClientRegister.LOGIN_FAILED(_userName);
+         JsonObject _message = ServerCommandData_Client.LOGIN_FAILED(_userName);
          ServerAPIHelper.SendMessage(argConnection, _message);
          return false;
       }
@@ -67,9 +69,10 @@ public class ServerProcessor_ClientRegister {
       if (_isRedirected == true) {
          return true;
       } else {
-         JsonObject _message = ServerCommandData_ClientRegister.LOGIN_SUCCESS(_userName);
+         JsonObject _message = ServerCommandData_Client.LOGIN_SUCCESS(_userName);
          ServerAPIHelper.SendMessage(argConnection, _message);
          argConnection.connectionType = ServerConnection.ConnectionType.ConnectedToClient;
+         argConnection.clientInfo = new String[]{_userName, _userSecret};
          return false;
       }
    }
@@ -85,10 +88,23 @@ public class ServerProcessor_ClientRegister {
          }
       }
       if (_connection != null) {
-         JsonObject _message = ServerCommandData_ClientRegister.REDIRECT(_connection);
+         JsonObject _message = ServerCommandData_Client.REDIRECT(_connection);
          ServerAPIHelper.SendMessage(argConnectionItem, _message);
          return true;
       }
+      return false;
+   }
+
+   private static boolean DealWith_ACTIVITY_MESSAGE(ServerConnection argConnection, JsonObject argJsonObject) {
+      // Deal with the verify logic
+      boolean _userCorrect = argConnection.clientInfo[1].equals(JsonHelper.GetValue(argJsonObject, "username"));
+      boolean _secretCorrect = argConnection.clientInfo[0].equals(JsonHelper.GetValue(argJsonObject, "username"));
+      if (_userCorrect == false || _secretCorrect == false) {
+         JsonObject _message = ServerCommandData_Server.AUTHENTICATION_FAIL("Not logged in yet");
+         ServerAPIHelper.SendMessage(argConnection, _message);
+         return true;
+      }
+
       return false;
    }
 

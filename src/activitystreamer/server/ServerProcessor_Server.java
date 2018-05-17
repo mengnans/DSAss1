@@ -4,7 +4,7 @@ import activitystreamer.util.JsonHelper;
 import activitystreamer.util.Settings;
 import com.google.gson.JsonObject;
 
-public class ServerProcessor_ServerConnection {
+public class ServerProcessor_Server {
 
    /**
     * This function will be called when the server succeed in connecting to another server
@@ -12,12 +12,12 @@ public class ServerProcessor_ServerConnection {
     * @param argConnection The ServerConnection object of this new connection
     */
    public static void DoAuthenticate(ServerConnection argConnection) {
-      JsonObject _message = ServerCommandData_ServerConnection.AUTHENTICATE();
+      JsonObject _message = ServerCommandData_Server.AUTHENTICATE();
       ServerAPIHelper.SendMessage(argConnection, _message);
    }
 
    public static void SendRegisteredUserList(ServerConnection argConnection) {
-      JsonObject _message = ServerCommandData_ServerConnection.LOCK_SERVER_JOIN();
+      JsonObject _message = ServerCommandData_Server.LOCK_SERVER_JOIN();
       ServerAPIHelper.SendMessage(argConnection, _message);
    }
 
@@ -37,7 +37,7 @@ public class ServerProcessor_ServerConnection {
                return false;
             }
             if (Settings.getSecret().equals(JsonHelper.GetValue(argJsonObject, "secret")) == false) {
-               JsonObject _message = ServerCommandData_ServerConnection.AUTHENTICATION_FAIL("Wrong secrets value");
+               JsonObject _message = ServerCommandData_Server.AUTHENTICATION_FAIL("Wrong secrets value");
                ServerAPIHelper.SendMessage(argConnection, _message);
                return true;
             }
@@ -50,7 +50,7 @@ public class ServerProcessor_ServerConnection {
             String[] _userSecret = JsonHelper.GetValue(argJsonObject, "connectedClientSecret").split("\r");
 
             if (_userName.length != _userSecret.length) {
-               JsonObject _message = ServerCommandData_ServerConnection.AUTHENTICATION_FAIL("The length of user name and user secret is not the same");
+               JsonObject _message = ServerCommandData_Server.AUTHENTICATION_FAIL("The length of user name and user secret is not the same");
                ServerAPIHelper.SendMessage(argConnection, _message);
                return false;
             }
@@ -61,10 +61,10 @@ public class ServerProcessor_ServerConnection {
                }
             }
             if (_isChanged) {
-               JsonObject _message = ServerCommandData_ServerConnection.USER_LIST_UPDATE();
+               JsonObject _message = ServerCommandData_Server.USER_LIST_UPDATE();
                ServerAPIHelper.BroadcastToServer(_message);
             } else {
-               JsonObject _message = ServerCommandData_ServerConnection.USER_LIST_UPDATE();
+               JsonObject _message = ServerCommandData_Server.USER_LIST_UPDATE();
                ServerAPIHelper.SendMessage(argConnection, _message);
             }
             return false;
@@ -76,13 +76,13 @@ public class ServerProcessor_ServerConnection {
             String[] _userSecret = _secretData.split(",");
 
             if (_userName.length != _userSecret.length) {
-               JsonObject _message = ServerCommandData_ServerConnection.AUTHENTICATION_FAIL("The length of user name and user secret is not the same");
+               JsonObject _message = ServerCommandData_Server.AUTHENTICATION_FAIL("The length of user name and user secret is not the same");
                ServerAPIHelper.SendMessage(argConnection, _message);
                return false;
             }
             boolean _isChanged = ServerAPIHelper.UpdateUserInfoList(_userName, _userSecret);
             if (_isChanged) {
-               JsonObject _message = ServerCommandData_ServerConnection.USER_LIST_UPDATE();
+               JsonObject _message = ServerCommandData_Server.USER_LIST_UPDATE();
                ServerAPIHelper.BroadcastToServer(_message);
             }
             return false;

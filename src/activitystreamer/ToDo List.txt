@@ -1,0 +1,3 @@
+anonymous的用户的逻辑完全没做
+客户端的消息广播
+Eventual consistency

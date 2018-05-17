@@ -2,7 +2,7 @@ package activitystreamer.server;
 
 import com.google.gson.JsonObject;
 
-public class ServerCommandData_ClientRegister {
+public class ServerCommandData_Client {
 
    public static JsonObject REGISTER_FAILED(String argUserName) {
       JsonObject _message = new JsonObject();

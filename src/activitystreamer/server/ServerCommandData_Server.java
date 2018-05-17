@@ -3,7 +3,7 @@ package activitystreamer.server;
 import activitystreamer.util.Settings;
 import com.google.gson.JsonObject;
 
-public class ServerCommandData_ServerConnection {
+public class ServerCommandData_Server {
 
    public static JsonObject AUTHENTICATE() {
       JsonObject _message = new JsonObject();

@@ -24,10 +24,13 @@ public class ServerProcessor {
          case "LOCK_SERVER_JOIN":
          case "USER_LIST_UPDATE":
          case "SERVER_ANNOUNCE":
-            return ServerProcessor_ServerConnection.ProcessNetworkMessage(argConnection, argJsonObject);
+            return ServerProcessor_Server.ProcessNetworkMessage(argConnection, argJsonObject);
          case "REGISTER":
          case "LOGIN":
-            return ServerProcessor_ClientRegister.ProcessNetworkMessage(argConnection, argJsonObject);
+            return ServerProcessor_Client.ProcessNetworkMessage(argConnection, argJsonObject);
+         case "ACTIVITY_MESSAGE":
+         case "ACTIVITY_BROADCAST":
+            return ServerProcessor_ActivityMessage.ProcessNetworkMessage(argConnection, argJsonObject);
       }
       return false;
    }

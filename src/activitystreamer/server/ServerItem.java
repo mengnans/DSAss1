@@ -84,8 +84,8 @@ public class ServerItem extends Thread {
             _connection.connectionType = ServerConnection.ConnectionType.ConnectedToServer;
             connections.add(_connection);
             _connection.isRegistered = true;
-            ServerProcessor_ServerConnection.DoAuthenticate(_connection);
-            ServerProcessor_ServerConnection.SendRegisteredUserList(_connection);
+            ServerProcessor_Server.DoAuthenticate(_connection);
+            ServerProcessor_Server.SendRegisteredUserList(_connection);
          } catch (IOException e) {
             log.error("failed to make connection to " + Settings.getRemoteHostname() + ":" + Settings.getRemotePort() + " :" + e);
             System.exit(-1);

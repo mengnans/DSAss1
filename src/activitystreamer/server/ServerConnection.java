@@ -26,6 +26,8 @@ public class ServerConnection extends Thread {
    public ArrayList<JsonObject> lstToBeSentMessage = new ArrayList<>();
    public ConnectionType connectionType = ConnectionType.Undefined;
 
+   public String[] clientInfo;
+
    public ServerConnection(Socket socket) throws IOException {
       in = new DataInputStream(socket.getInputStream());
       out = new DataOutputStream(socket.getOutputStream());
