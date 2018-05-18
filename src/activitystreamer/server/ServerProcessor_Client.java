@@ -54,7 +54,12 @@ public class ServerProcessor_Client {
    private static boolean DealWith_LOGIN(ServerConnection argConnection, JsonObject argJsonObject) {
       String _userName = JsonHelper.GetValue(argJsonObject, "username");
       String _userSecret = JsonHelper.GetValue(argJsonObject, "secret");
-      if (argConnection.isRegistered || argConnection.connectionType != ServerConnection.ConnectionType.Undefined || _userName == null || _userSecret == null) {
+      if (_userName == null || (_userName != "anonymous" && _userSecret == "null")) {
+         JsonObject _message = ServerCommandData.InvalidMessage("Should contain userName and userSecret");
+         ServerAPIHelper.SendMessage(argConnection, _message);
+         return true;
+      }
+      if (argConnection.isRegistered || argConnection.connectionType != ServerConnection.ConnectionType.Undefined) {
          JsonObject _message = ServerCommandData.InvalidMessage("Should contain userName and userSecret");
          ServerAPIHelper.SendMessage(argConnection, _message);
          return true;

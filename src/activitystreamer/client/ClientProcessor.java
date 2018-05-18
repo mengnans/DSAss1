@@ -9,26 +9,18 @@ public class ClientProcessor {
    /**
     * This function will be called when the client wants to connect a server
     */
-   public static boolean ProcessConnection() {
-      boolean _isConnected = ClientAPIHelper.SetConnection(Settings.getRemoteHostname(), Settings.getRemotePort());
-      if (_isConnected) {
-         ClientAPIHelper.SetDisplayMessage("The client successfully connects to the server");
-      } else {
-         ClientAPIHelper.SetDisplayMessage("The client fails to connect the server");
-      }
-      return _isConnected;
-   }
-
-   /**
-    * This function will be called when the client wants to connect a server
-    */
    public static void ProcessConnectionAndRegister() {
       boolean _isConnected = ClientAPIHelper.SetConnection(Settings.getRemoteHostname(), Settings.getRemotePort());
       if (_isConnected) {
          ClientAPIHelper.SetDisplayMessage("The client successfully connects to the server");
          if (Settings.getUsername() != null) {
-            JsonObject _message = ClientCommandData.REGISTER();
-            ClientAPIHelper.SendMessage(_message);
+            if (Settings.getUsername().equals("anonymous")) {
+               JsonObject _message = ClientCommandData.LOGIN();
+               ClientAPIHelper.SendMessage(_message);
+            } else {
+               JsonObject _message = ClientCommandData.REGISTER();
+               ClientAPIHelper.SendMessage(_message);
+            }
          }
       } else {
          ClientAPIHelper.SetDisplayMessage("The client fails to connect the server");
@@ -56,7 +48,7 @@ public class ClientProcessor {
             ClientAPIHelper.SetDisplayMessage("Failed to log in: " + argJsonObject.get("info"));
             break;
          case "ACTIVITY_BROADCAST":
-            ClientAPIHelper.SetDisplayMessage(argJsonObject);
+            ClientAPIHelper.SetDisplayMessage("Received a message: " + JsonHelper.GetValue(argJsonObject, "activity"));
             break;
          case "REDIRECT": {
             ClientAPIHelper.SetDisplayMessage("Redirected to host:" + argJsonObject.get("hostname") + " port:" + argJsonObject.get("port"));

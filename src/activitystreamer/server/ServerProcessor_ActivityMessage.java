@@ -16,8 +16,12 @@ public class ServerProcessor_ActivityMessage {
       switch (_command) {
          case "ACTIVITY_MESSAGE": {
             // Deal with the verify logic
-            boolean _userCorrect = argConnection.clientInfo[1].equals(JsonHelper.GetValue(argJsonObject, "username"));
-            boolean _secretCorrect = argConnection.clientInfo[0].equals(JsonHelper.GetValue(argJsonObject, "username"));
+            boolean _userCorrect = argConnection.clientInfo[0].equals(JsonHelper.GetValue(argJsonObject, "username"));
+            boolean _secretCorrect = argConnection.clientInfo[1].equals(JsonHelper.GetValue(argJsonObject, "secret"));
+            if (JsonHelper.GetValue(argJsonObject, "username").equals("anonymous") && JsonHelper.GetValue(argJsonObject, "secret") == null) {
+               _userCorrect = true;
+               _secretCorrect = true;
+            }
             if (_userCorrect == false || _secretCorrect == false) {
                JsonObject _message = ServerCommandData_Server.AUTHENTICATION_FAIL("Not logged in yet");
                ServerAPIHelper.SendMessage(argConnection, _message);

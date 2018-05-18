@@ -21,6 +21,7 @@ public class ServerItem extends Thread {
    private ServerItem() {
       // start a listener
       try {
+         lstUserInfo.add(new String[]{"anonymous", "null"});
          listener = new ServerListener();
       } catch (IOException e1) {
          log.fatal("failed to startup a listening thread: " + e1);
