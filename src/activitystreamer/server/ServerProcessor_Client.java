@@ -45,6 +45,8 @@ public class ServerProcessor_Client {
          }
          case "LOGIN":
             return DealWith_LOGIN(argConnection, argJsonObject);
+         case "LOGOUT":
+            return true;
          case "ACTIVITY_MESSAGE":
             return DealWith_ACTIVITY_MESSAGE(argConnection, argJsonObject);
       }

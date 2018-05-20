@@ -53,7 +53,7 @@ public class ClientProcessor {
          case "REDIRECT": {
             ClientAPIHelper.SetDisplayMessage("Redirected to host:" + argJsonObject.get("hostname") + " port:" + argJsonObject.get("port"));
             Settings.setRemoteHostname(JsonHelper.GetValue(argJsonObject, "hostname"));
-            Settings.setRemotePort(Integer.parseInt(argJsonObject.get("port").toString()));
+            Settings.setRemotePort(JsonHelper.GetValueAsInt(argJsonObject, "port"));
 
             ClientAPIHelper.SetConnection(Settings.getRemoteHostname(), Settings.getRemotePort());
             JsonObject _message = ClientCommandData.LOGIN();

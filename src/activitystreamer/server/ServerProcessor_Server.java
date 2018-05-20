@@ -78,7 +78,13 @@ public class ServerProcessor_Server {
             if (_userName.length != _userSecret.length) {
                JsonObject _message = ServerCommandData_Server.AUTHENTICATION_FAIL("The length of user name and user secret is not the same");
                ServerAPIHelper.SendMessage(argConnection, _message);
-               return false;
+               return true;
+            }
+            for (int _newUserIndex = 0; _newUserIndex < _userName.length; _newUserIndex++) {
+               if (ServerAPIHelper.TestIsUserNameExisted(_userName[_newUserIndex]) == false) continue;
+               JsonObject _message = ServerCommandData_Server.AUTHENTICATION_FAIL("User [" + _userName[_newUserIndex] + "] is registered in two system. Join denied.");
+               ServerAPIHelper.SendMessage(argConnection, _message);
+               return true;
             }
             boolean _isChanged = ServerAPIHelper.UpdateUserInfoList(_userName, _userSecret);
             if (_isChanged) {

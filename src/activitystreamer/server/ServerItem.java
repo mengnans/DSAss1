@@ -12,11 +12,12 @@ import java.util.ArrayList;
 
 public class ServerItem extends Thread {
    private static final Logger log = LogManager.getLogger();
-   public static ArrayList<ServerConnection> connections = new ArrayList<>();
-   public static ArrayList<String[]> lstUserInfo = new ArrayList<>();
    private static ServerItem serverItem = null;
    private static boolean term = false;
    private static ServerListener listener;
+
+   public static ArrayList<ServerConnection> connections = new ArrayList<>();
+   public static ArrayList<String[]> lstUserInfo = new ArrayList<>();
 
    private ServerItem() {
       // start a listener

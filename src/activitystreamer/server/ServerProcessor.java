@@ -27,6 +27,7 @@ public class ServerProcessor {
             return ServerProcessor_Server.ProcessNetworkMessage(argConnection, argJsonObject);
          case "REGISTER":
          case "LOGIN":
+         case "LOGOUT":
             return ServerProcessor_Client.ProcessNetworkMessage(argConnection, argJsonObject);
          case "ACTIVITY_MESSAGE":
          case "ACTIVITY_BROADCAST":
