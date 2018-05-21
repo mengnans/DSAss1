@@ -55,6 +55,13 @@ public class ServerProcessor_Server {
                return false;
             }
             for (int _newUserIndex = 0; _newUserIndex < _userName.length; _newUserIndex++) {
+               if (ServerAPIHelper.TestIsUserNameExisted(_userName[_newUserIndex]) == false) continue;
+               if (ServerAPIHelper.TestIsUserInfoExisted(_userName[_newUserIndex], _userSecret[_newUserIndex])) continue;
+               JsonObject _message = ServerCommandData_Server.AUTHENTICATION_FAIL("User [" + _userName[_newUserIndex] + "] is registered in two system. Join denied.");
+               ServerAPIHelper.SendMessage(argConnection, _message);
+               return true;
+            }
+            for (int _newUserIndex = 0; _newUserIndex < _userName.length; _newUserIndex++) {
                if (ServerAPIHelper.TestIsUserNameExisted(_userName[_newUserIndex])) {
                   ServerItem.lstUserInfo.add(new String[]{_userName[_newUserIndex], _userSecret[_newUserIndex]});
                   _isChanged = true;
@@ -77,12 +84,6 @@ public class ServerProcessor_Server {
 
             if (_userName.length != _userSecret.length) {
                JsonObject _message = ServerCommandData_Server.AUTHENTICATION_FAIL("The length of user name and user secret is not the same");
-               ServerAPIHelper.SendMessage(argConnection, _message);
-               return true;
-            }
-            for (int _newUserIndex = 0; _newUserIndex < _userName.length; _newUserIndex++) {
-               if (ServerAPIHelper.TestIsUserNameExisted(_userName[_newUserIndex]) == false) continue;
-               JsonObject _message = ServerCommandData_Server.AUTHENTICATION_FAIL("User [" + _userName[_newUserIndex] + "] is registered in two system. Join denied.");
                ServerAPIHelper.SendMessage(argConnection, _message);
                return true;
             }
